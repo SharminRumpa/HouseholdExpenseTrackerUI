@@ -1,0 +1,76 @@
+<div class="dashboard-page" id="page-main-content">
+
+  <div class="modal-header">
+    <h2 class="table-title">Monthly summary</h2>
+   
+  </div>
+ <p>Income, expense and balance for the selected month.</p>
+  <div class="actions-row">
+
+    <select [(ngModel)]="month" (ngModelChange)="onPeriodChange()">
+      <option *ngFor="let m of months; let i = index" [ngValue]="i + 1">{{ m }}</option>
+    </select>
+    <input type="number" [(ngModel)]="year" (ngModelChange)="onPeriodChange()" class="year-input" />
+  </div>
+
+  <p class="error-text" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+  <p class="loading-text" *ngIf="isLoading()">Loading...</p>
+
+  <ng-container *ngIf="!isLoading() && !errorMessage() && summary() as data">
+    <div class="kpi-row">
+      <div class="panel kpi">
+        <span class="kpi-label">Income</span>
+        <span class="kpi-value num figure--credit">৳{{ data.totalIncome | number: '1.0-0' }}</span>
+      </div>
+      <div class="panel kpi">
+        <span class="kpi-label">Expense</span>
+        <span class="kpi-value num figure--debit">৳{{ data.totalExpense | number: '1.0-0' }}</span>
+      </div>
+      <div class="panel kpi">
+        <span class="kpi-label">Balance</span>
+        <span class="kpi-value num figure--gold">৳{{ data.balance | number: '1.0-0' }}</span>
+      </div>
+    </div>
+
+    <div class="breakdown-row">
+      <div class="panel">
+        <h3>Income by category</h3>
+        <ul class="breakdown-list" *ngIf="data.incomeByCategory.length; else noIncome">
+          <li *ngFor="let row of data.incomeByCategory">
+            <span>{{ row.categoryName }}</span>
+            <span class="num figure--credit">৳{{ row.total | number: '1.0-0' }}</span>
+          </li>
+        </ul>
+        <ng-template #noIncome>
+          <p class="empty-state">No income recorded this month.</p>
+        </ng-template>
+      </div>
+
+      <div class="panel">
+        <h3>Expense by category</h3>
+        <ul class="breakdown-list" *ngIf="data.expenseByCategory.length; else noExpense">
+          <li *ngFor="let row of data.expenseByCategory">
+            <span>{{ row.categoryName }}</span>
+            <span class="num figure--debit">৳{{ row.total | number: '1.0-0' }}</span>
+          </li>
+        </ul>
+        <ng-template #noExpense>
+          <p class="empty-state">No expenses recorded this month.</p>
+        </ng-template>
+      </div>
+    </div>
+  </ng-container>
+
+</div>
+
+<!-- <div class="page-header">
+  
+
+  <div class="actions-row">
+    <select [(ngModel)]="month" (ngModelChange)="onPeriodChange()">
+      <option *ngFor="let m of months; let i = index" [ngValue]="i + 1">{{ m }}</option>
+    </select>
+    <input type="number" [(ngModel)]="year" (ngModelChange)="onPeriodChange()" class="year-input" />
+  </div>
+</div> -->

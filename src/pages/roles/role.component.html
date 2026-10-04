@@ -1,0 +1,44 @@
+<div class="role-page">
+
+  <div class="page-header">
+    <h1>Roles</h1>
+    <button type="button" class="btn-primary" (click)="openCreateForm()">+ Add Role</button>
+  </div>
+
+  <div *ngIf="isLoading()" class="state-message">Loading...</div>
+
+  <div *ngIf="errorMessage()" class="state-message error">
+    {{ errorMessage() }}
+    <button type="button" class="retry-btn" (click)="loadRoles()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && !errorMessage()">
+
+    <table class="data-table" *ngIf="roles().length; else noRoles">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Role Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let role of roles()">
+          <td>{{ role.roleId }}</td>
+          <td>{{ role.roleName }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noRoles>
+      <p class="empty-message">No roles found.</p>
+    </ng-template>
+
+  </ng-container>
+
+  <app-role-form
+    *ngIf="showCreateForm()"
+    (created)="onRoleCreated()"
+    (cancelled)="onCreateCancelled()">
+  </app-role-form>
+
+</div>

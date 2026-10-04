@@ -1,0 +1,92 @@
+<div class="income-page" id="page-main-content">
+
+    <div class="modal-header">
+    <h2 class="table-title">Income Details</h2>
+  </div>
+
+  <form class="filter-bar" [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+    <div class="filter-field">
+      <label for="fromDate">From Date</label>
+      <input id="fromDate" type="date" formControlName="fromDate" />
+    </div>
+
+    <div class="filter-field">
+      <label for="toDate">To Date</label>
+      <input id="toDate" type="date" formControlName="toDate" />
+    </div>
+
+    <div class="filter-field">
+      <label for="categoryId">Category</label>
+      <select id="categoryId" formControlName="categoryId">
+        <option [ngValue]="null">All categories</option>
+        <option *ngFor="let category of categories()" [ngValue]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-search">Search</button>
+      <button type="button" class="btn btn-reset" (click)="resetFilters()">Reset</button>
+    </div>
+  </form>
+
+  <div *ngIf="isLoading()" class="state-message">Loading...</div>
+
+  <div *ngIf="errorMessage()" class="state-message error">
+    {{ errorMessage() }}
+    <button type="button" class="retry-btn" (click)="loadIncomes()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && !errorMessage()">
+
+     <div class="summary" *ngIf="incomes().length">
+      Total {{ incomes().length }} records income sum: <strong>{{ totalAmount() | number: '1.2-2' }}</strong>
+    </div>
+
+    <table class="data-table" *ngIf="incomes().length; else noIncomes">
+      <thead>
+        <tr>
+           <th class="num">#</th>
+          <th>Received Date</th>
+          <th>Category</th>
+          <th>Source</th>
+          <th>Payment Method</th>
+          <th>Description</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let income of pagedIncomes(); let i = index">
+          <td class="num">{{ i + 1 }}</td>
+          <td>{{ income.receivedDate }}</td>
+          <td>{{ income.incomeCategoryName }}</td>
+          <td>{{ income.incomeSourceName || '—' }}</td>
+          <td>{{ income.paymentMethod || '—' }}</td>
+          <td>{{ income.description || '—' }}</td>
+          <td class="amount">{{ income.amount | number: '1.2-2' }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <ng-template #noIncomes>
+      <p class="empty-message">No income records found for the selected filters.</p>
+    </ng-template>
+
+    <div class="pagination" *ngIf="incomes().length">
+      <button type="button" (click)="previousPage()" [disabled]="currentPage() === 1">Previous</button>
+      <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+      <button type="button" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+    </div>
+
+  </ng-container>
+
+  <div class="page-footer">
+    <button type="button" class="btn btn-add" (click)="openCreateForm()">+ Add New</button>
+  </div>
+
+  <app-income-form *ngIf="showCreateForm()" [categories]="categories()" [incomeSources]="incomeSources()"
+    (created)="onIncomeCreated()" (cancelled)="onCreateCancelled()">
+  </app-income-form>
+
+</div>

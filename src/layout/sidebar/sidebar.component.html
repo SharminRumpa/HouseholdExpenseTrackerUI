@@ -1,0 +1,61 @@
+<!-- 
+<aside class="sidebar">
+  <div class="brand">
+    <span class="brand-mark">৳</span>
+    <div class="brand-text">
+      <strong>Household</strong>
+      <span>Expense Tracker</span>
+    </div>
+  </div>
+
+  <nav>
+     <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      class="nav-link"
+    >
+      {{ item.label }}
+    </a>
+  </nav>
+
+  <button class="nav-link logout" (click)="logout()">Logout</button>
+</aside> 
+ -->
+
+ 
+<aside class="sidebar">
+
+  <div class="brand">
+    <span class="brand-mark">৳</span>
+    <div class="brand-text">
+      <strong>Household</strong>
+      <span>Expense Tracker</span>
+    </div>
+  </div>
+
+<!-- 
+  <div class="sidebar-user" *ngIf="currentUser() as user">
+    <div class="user-name">{{ user.name }}</div>
+    <div class="user-role">{{ user.roleName }}</div>
+  </div> -->
+
+  <nav class="sidebar-nav">
+    <a
+      *ngFor="let item of menuItems()"
+      [routerLink]="item.route"
+      routerLinkActive="active"
+      class="nav-link"
+    >
+      <!-- `icon` is just a string column from the DB (e.g. an icon-font
+           class or keyword) — swap this span for your actual icon system
+           (icon font class, SVG sprite, etc). -->
+      <!-- <span class="nav-icon" *ngIf="item.icon">{{ item.icon }}</span> -->
+      <span class="nav-title">{{ item.title }}</span>
+    </a>
+  </nav>
+
+  <!-- <button type="button" class="logout-btn" (click)="logout()">Log Out</button> -->
+  <button class="nav-link logout" (click)="logout()">Logout</button>
+
+</aside>

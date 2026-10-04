@@ -1,0 +1,68 @@
+
+$ink: #000000;
+$surface: #ffffff;
+
+$primary-color: #2563eb;
+$border-color: #d1d5db;
+$input-radius: 6px;
+
+$table-bg: #ffffff;
+$table-border-color: #e2e8f0;
+$table-header-bg: #2563EB;
+$table-header-color: #ffffff;
+$table-row-hover: #f1f5f9;
+$table-text-color: #1e293b;
+$border-radius: 8px;
+
+// _variables.scss
+// Standard button colors, named by ACTION so the meaning stays consistent
+// across the whole app (change a color here, every button of that action updates).
+
+// Search , Submit filters  -> main call-to-action
+$btn-search-bg:        #00a1d7;
+$btn-search-hover:     #108fba;
+
+//Add
+$btn-primary-bg:        #2563eb;
+$btn-primary-hover:     #1d4ed8;
+
+// Save / Create / Confirm        -> positive, completes something
+$btn-success-bg:        #16a34a;
+$btn-success-hover:     #15803d;
+
+// Delete / Remove / Discard      -> destructive
+$btn-danger-bg:         #dc2626;
+$btn-danger-hover:      #b91c1c;
+
+// Edit / Update                  -> modifies existing data
+$btn-warning-bg:        #d97706;
+$btn-warning-hover:     #b45309;
+
+// View / Details / Export        -> informational
+$btn-info-bg:           #0891b2;
+$btn-info-hover:        #0e7490;
+
+// Cancel / Reset / Close         -> neutral outline
+$btn-secondary-bg:      #ffffff;
+$btn-secondary-hover:   #f3f4f6;
+$btn-secondary-border:  #d1d5db;
+$btn-secondary-text:    #374151;
+
+// Cancel
+$btn-cancel-bg:#da7e14;
+$btn-cancel-hover:#c36e0b;
+
+//Reset
+$btn-reset-bg:#ea8f26db;
+$btn-reset-hover:#e78515db;
+
+// Shared
+$btn-text-light:        #ffffff;
+$btn-radius:            4px;
+$btn-disabled-opacity:  0.55;
+$btn-focus-ring:        #93c5fd;
+
+//form color
+$lbl-text :  #374151; /* Normal label text color */
+$lbl-input: #000000;
+$field-error:#ac0b0b;

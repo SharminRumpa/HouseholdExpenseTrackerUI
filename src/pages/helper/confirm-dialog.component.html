@@ -1,0 +1,22 @@
+<div class="modal-backdrop" (click)="onBackdropClick()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h2>{{ title }}</h2>
+    </div>
+   
+    <p class="message">{{ message }}</p>
+
+    <p class="form-error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+     <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancelled.emit()" [disabled]="isProcessing">
+        {{ cancelLabel }}
+      </button>
+       <button type="button" class="btn btn-delete" (click)="confirmed.emit()" [disabled]="isProcessing">
+        {{ isProcessing ? 'Deleting...' : confirmLabel }}
+      </button>       
+      </div>
+
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<div class="user-page" id="page-main-content">
+
+   <div class="modal-header">
+      <h2 class="table-title">User List</h2>
+    </div>
+
+  <div *ngIf="isLoading()" class="state-message">Loading...</div>
+
+  <div *ngIf="errorMessage()" class="state-message error">
+    {{ errorMessage() }}
+    <button type="button" class="retry-btn" (click)="loadUsers()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && !errorMessage()">
+
+    <div class="table-wrapper" *ngIf="users().length; else noUsers">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Role</th>
+            <th>Created Date</th>
+            <th>Updated Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of pagedUsers(); let i = index">
+            <td class="num">{{ i + 1 }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.mobileNumber || '—' }}</td>
+            <td><span class="badge">{{ user.roleName }}</span></td>
+            <td>{{ user.createdAt | date: 'mediumDate' }}</td>
+            <td>{{ user.lastUpdatedAt | date: 'mediumDate' }}</td>
+            <td class="row-actions">
+              <button class="icon-btn btn-edit" title="Edit" (click)="startEdit(user)">
+                ✎ <span class="visually-hidden">Edit</span>
+              </button>
+              <button class="icon-btn btn-delete" title="Delete" (click)="remove(user)">
+                🗑 <span class="visually-hidden">Delete</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noUsers>
+      <p class="empty-message">No users found.</p>
+    </ng-template>
+
+    <div class="pagination" *ngIf="users().length">
+      <button type="button" (click)="previousPage()" [disabled]="currentPage() === 1">Previous</button>
+      <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+      <button type="button" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+    </div>
+
+  </ng-container>
+
+  <div class="page-footer">
+    <button type="button" class="btn btn-add" (click)="openCreateForm()">+ Add New</button>
+  </div>
+
+  <app-user-form
+    *ngIf="isFormOpen()"
+    [roles]="roles()"
+    [userToEdit]="userBeingEdited()"
+    (saved)="onUserSaved()"
+    (cancelled)="onFormCancelled()">
+  </app-user-form>
+ 
+  <app-confirm-dialog
+    *ngIf="userPendingDelete() as user"
+    title="Delete User"
+    [message]="'Are you sure you want to delete ' + user.name + '? This cannot be undone.'"
+    confirmLabel="Yes, Delete"
+    [isProcessing]="isDeleting()"
+    [errorMessage]="deleteErrorMessage()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()">
+  </app-confirm-dialog>
+ 
+</div>

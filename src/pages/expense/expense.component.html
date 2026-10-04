@@ -1,0 +1,102 @@
+<div class="expense-page" id="page-main-content">
+
+  <div class="modal-header">
+    <h2 class="table-title">Expense Details</h2>
+  </div>
+
+  <form class="filter-bar" [formGroup]="filterForm" (ngSubmit)="applyFilters()">
+    <div class="filter-field">
+      <label for="fromDate">From Date</label>
+      <input id="fromDate" type="date" formControlName="fromDate" />
+    </div>
+
+    <div class="filter-field">
+      <label for="toDate">To Date</label>
+      <input id="toDate" type="date" formControlName="toDate" />
+    </div>
+
+    <div class="filter-field">
+      <label for="categoryId">Category</label>
+      <select id="categoryId" formControlName="categoryId">
+        <option [ngValue]="null">All categories</option>
+        <option *ngFor="let category of categories()" [ngValue]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-search">Search</button>
+      <button type="button" class="btn btn-reset" (click)="resetFilters()">Reset</button>
+    </div>
+  </form>
+
+  <div *ngIf="isLoading()" class="state-message">Loading...</div>
+
+  <div *ngIf="errorMessage()" class="state-message error">
+    {{ errorMessage() }}
+    <button type="button" class="retry-btn" (click)="loadExpenses()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && !errorMessage()">
+
+    <div class="summary" *ngIf="expenses().length">
+      Total {{ expenses().length }} records sum: <strong>{{ totalAmount() | number: '1.2-2' }}</strong>
+    </div>
+
+    <div class="table-wrapper" *ngIf="expenses().length; else noExpenses">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Date</th>
+            <th>Expense By</th>
+            <th>Category</th>
+            <th>Sub Category</th>
+            <th>Quantity</th>
+            <th>Net Weight</th>
+            <th class="amount">Amount</th>
+            <!-- <th>Payment</th>
+            <th>Description</th> -->
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of pagedExpenses(); let i = index">
+            <td class="num">{{ i + 1 }}</td>
+            <td>{{ expense.expenseDate }}</td>
+            <td>{{ expense.expenseBy || '—' }}</td>
+            <td>{{ expense.expenseCategoryName }}</td>
+            <td>{{ expense.expenseSubCategoryName || '—' }}</td>
+            <td>{{ expense.quantity != null ? (expense.quantity | number: '1.0-3') + ' ' + (expense.unit || '') : '—' }}
+            </td>
+            <td>{{ expense.netWeight != null ? (expense.netWeight | number: '1.0-3') + ' ' + (expense.weightUnit || '')
+              : '—' }}</td>
+            <td class="amount">{{ expense.amount | number: '1.2-2' }}</td>
+            <!-- <td>{{ expense.paymentMethod || '—' }}</td>
+            <td>{{ expense.description || '—' }}</td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noExpenses>
+      <p class="empty-message">No expense records found for the selected filters.</p>
+    </ng-template>
+
+    <div class="pagination" *ngIf="expenses().length">
+      <button type="button" (click)="previousPage()" [disabled]="currentPage() === 1">Previous</button>
+      <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+      <button type="button" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+    </div>
+
+  </ng-container>
+
+  <div class="page-footer">
+    <button type="button" class="btn btn-add" (click)="openCreateForm()">+ Add New</button>
+  </div>
+
+  <app-expense-form *ngIf="showCreateForm()" [categories]="categories()" (created)="onExpenseCreated()"
+    (cancelled)="onCreateCancelled()">
+  </app-expense-form>
+
+</div>

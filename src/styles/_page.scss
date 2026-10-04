@@ -1,0 +1,46 @@
+
+@mixin page-section {
+  background: #f6f2ed7d;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+@mixin page-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+@mixin panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+@mixin actions-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+@mixin inline-edit-form {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+
+  input,
+  select {
+    width: auto;
+    min-width: 160px;
+  }
+}
+
+.summary{
+  font-size: 1rem;
+  color: #991010;
+}

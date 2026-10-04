@@ -1,0 +1,157 @@
+@use '../../styles/filter-bar.scss' as *;
+@use '../../styles/table.scss' as *;
+@use '../../styles/btn.scss' as *;
+@use '../../styles//modal' as *;
+
+// .page-header h1 {
+//   margin: 0;
+//   font-size: 1.3rem;
+// }
+
+// .filter-bar {
+//   display: flex;
+//   align-items: flex-end;
+//   gap: 1rem;
+//   flex-wrap: wrap;
+//   background: #f8f9fb;
+//   padding: 1rem;
+//   border-radius: 6px;
+// }
+
+//.filter-field {
+//   display: flex;
+//   flex-direction: column;
+//   gap: 0.3rem;
+// }
+
+// .filter-field label {
+//   font-size: 0.8rem;
+//   font-weight: 600;
+//   color: #4b5563;
+// }
+
+// .filter-field input,
+// .filter-field select {
+//   padding: 0.45rem 0.6rem;
+//   border: 1px solid #d1d5db;
+//   border-radius: 4px;
+//   font-size: 0.88rem;
+// }
+
+// .filter-actions {
+//   display: flex;
+//   gap: 0.6rem;
+// }
+
+// .data-table {
+//   width: 100%;
+//   border-collapse: collapse;
+//   background: #fff;
+//   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+// }
+
+// .data-table th,
+// .data-table td {
+//   text-align: left;
+//   padding: 0.6rem 0.9rem;
+//   border-bottom: 1px solid #e5e7eb;
+// }
+
+// .data-table th {
+//   background: #f8f9fb;
+//   font-weight: 600;
+//   font-size: 0.85rem;
+//   text-transform: uppercase;
+//   letter-spacing: 0.02em;
+//   color: #4b5563;
+// }
+
+// .data-table tbody tr:hover {
+//   background: #f9fafb;
+// }
+
+// .data-table td.amount {
+//   text-align: right;
+//   font-variant-numeric: tabular-nums;
+// }
+
+// .state-message {
+//   padding: 0.75rem 1rem;
+//   border-radius: 4px;
+//   background: #f3f4f6;
+//   color: #374151;
+// }
+
+// .state-message.error {
+//   background: #fdecea;
+//   color: #b02a37;
+//   display: flex;
+//   align-items: center;
+//   gap: 0.75rem;
+// }
+
+// .retry-btn {
+//   border: 1px solid #b02a37;
+//   background: transparent;
+//   color: #b02a37;
+//   padding: 0.25rem 0.75rem;
+//   border-radius: 4px;
+//   cursor: pointer;
+//   font-size: 0.85rem;
+// }
+
+// .retry-btn:hover {
+//   background: #b02a37;
+//   color: #fff;
+// }
+
+// .empty-message {
+//   color: #6b7280;
+//   font-style: italic;
+// }
+
+// .pagination {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 1rem;
+// }
+
+// .pagination button {
+//   padding: 0.4rem 0.9rem;
+//   border: 1px solid #d1d5db;
+//   border-radius: 4px;
+//   background: #fff;
+//   cursor: pointer;
+//   font-size: 0.85rem;
+// }
+
+// .pagination button:disabled {
+//   color: #9ca3af;
+//   cursor: not-allowed;
+// }
+
+// .page-info {
+//   font-size: 0.85rem;
+//   color: #4b5563;
+// }
+
+// .btn-primary,
+// .btn-secondary {
+//   padding: 0.5rem 1.1rem;
+//   border-radius: 4px;
+//   font-size: 0.9rem;
+//   cursor: pointer;
+//   border: 1px solid transparent;
+// }
+
+// .btn-primary {
+//   background: #2563eb;
+//   color: #fff;
+// }
+
+// .btn-secondary {
+//   background: #fff;
+//   border-color: #d1d5db;
+//   color: #374151;
+// }
