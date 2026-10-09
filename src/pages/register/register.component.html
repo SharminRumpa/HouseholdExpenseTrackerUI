@@ -18,7 +18,9 @@
 
     <p class="error-text" *ngIf="errorMessage">{{ errorMessage }}</p>
 
-    <button type="submit" [disabled]="loading">{{ loading ? 'Creating…' : 'Create account' }}</button>
+    <button type="submit" [disabled]="loading">
+      {{ loading ? 'Creating…' : 'Create account' }}
+    </button>
 
     <p class="switch-link">Already have an account? <a routerLink="/login">Sign in</a></p>
   </form>

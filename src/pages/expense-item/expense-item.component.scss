@@ -1,0 +1,33 @@
+@use '../../styles/filter-bar.scss' as *;
+@use '../../styles/table.scss' as *;
+@use '../../styles/btn.scss' as *;
+@use '../../styles/modal' as *;
+
+.description {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inactive-row {
+  opacity: 0.6;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.badge-active {
+  background: #e6f4ea;
+  color: #1e7e34;
+}
+
+.badge-inactive {
+  background: #fdecea;
+  color: #b02a37;
+}

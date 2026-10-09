@@ -1,14 +1,20 @@
 <div class="modal-backdrop" (click)="cancel()">
   <div class="modal-panel" (click)="$event.stopPropagation()">
-
     <h2>Add Role</h2>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
-
       <div class="field">
         <label for="roleName">Role Name *</label>
-        <input id="roleName" type="text" formControlName="roleName" placeholder="e.g. Admin, Member, Viewer" />
-        <span class="field-error" *ngIf="form.controls.roleName.touched && form.controls.roleName.invalid">
+        <input
+          id="roleName"
+          type="text"
+          formControlName="roleName"
+          placeholder="e.g. Admin, Member, Viewer"
+        />
+        <span
+          class="field-error"
+          *ngIf="form.controls.roleName.touched && form.controls.roleName.invalid"
+        >
           Role name is required.
         </span>
       </div>
@@ -16,13 +22,13 @@
       <p class="form-error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
 
       <div class="form-actions">
-        <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="isSaving()">Cancel</button>
+        <button type="button" class="btn-secondary" (click)="cancel()" [disabled]="isSaving()">
+          Cancel
+        </button>
         <button type="submit" class="btn-success" [disabled]="isSaving()">
           {{ isSaving() ? 'Saving...' : 'Save Role' }}
         </button>
       </div>
-
     </form>
-
   </div>
 </div>

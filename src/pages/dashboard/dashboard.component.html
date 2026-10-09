@@ -1,12 +1,9 @@
 <div class="dashboard-page" id="page-main-content">
-
   <div class="modal-header">
     <h2 class="table-title">Monthly summary</h2>
-   
   </div>
- <p>Income, expense and balance for the selected month.</p>
+  <p>Income, expense and balance for the selected month.</p>
   <div class="actions-row">
-
     <select [(ngModel)]="month" (ngModelChange)="onPeriodChange()">
       <option *ngFor="let m of months; let i = index" [ngValue]="i + 1">{{ m }}</option>
     </select>
@@ -61,16 +58,4 @@
       </div>
     </div>
   </ng-container>
-
 </div>
-
-<!-- <div class="page-header">
-  
-
-  <div class="actions-row">
-    <select [(ngModel)]="month" (ngModelChange)="onPeriodChange()">
-      <option *ngFor="let m of months; let i = index" [ngValue]="i + 1">{{ m }}</option>
-    </select>
-    <input type="number" [(ngModel)]="year" (ngModelChange)="onPeriodChange()" class="year-input" />
-  </div>
-</div> -->

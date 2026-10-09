@@ -9,7 +9,7 @@ import { RoleService } from '../../core/services/role.service';
   standalone: true,
   imports: [CommonModule, RoleFormComponent],
   templateUrl: './role.component.html',
-  styleUrls: ['./role.component.scss']
+  styleUrls: ['./role.component.scss'],
 })
 export class RoleComponent implements OnInit {
   private roleService = inject(RoleService);
@@ -35,7 +35,7 @@ export class RoleComponent implements OnInit {
       error: () => {
         this.errorMessage.set('Failed to load roles. Please try again.');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 

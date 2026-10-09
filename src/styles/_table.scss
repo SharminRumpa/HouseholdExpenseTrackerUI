@@ -1,63 +1,5 @@
 @use '../styles/variables' as *;
 
-// @mixin ledger-table {
-//   width: 100%;
-//   border-collapse: collapse;
-
-//   th {
-//     text-align: left;
-//     font-size: 12px;
-//     font-weight: 600;
-//     color: var(--ink-soft);
-//     padding: 8px 10px;
-//     border-bottom: 2px solid var(--ink);
-//   }
-
-//   td {
-//     padding: 10px;
-//     border-bottom: 1px solid var(--line);
-//     vertical-align: middle;
-//   }
-
-//   th.num,
-//   td.num {
-//     text-align: right;
-//   }
-
-//   tbody tr:hover {
-//     background: var(--surface);
-//   }
-// }
-
-// @mixin row-actions {
-//   display: flex;
-//   gap: 4px;
-//   justify-content: flex-end;
-// }
-
-// @mixin icon-btn {
-//   background: transparent;
-//   border: 1px solid var(--line);
-//   color: var(--ink);
-//   width: 28px;
-//   height: 28px;
-//   padding: 0;
-//   border-radius: var(--radius);
-//   font-size: 13px;
-//   line-height: 1;
-
-//   &:hover {
-//     background: var(--surface);
-//     border-color: var(--ink);
-//     opacity: 1;
-//   }
-
-//   &.icon-btn--danger:hover {
-//     border-color: var(--debit);
-//     color: var(--debit);
-//   }
-// }
-
 .table-title {
   text-align: center;
   font-size: 1.1rem;
@@ -66,7 +8,6 @@
   margin: 0;
   background: #f1f5f9;
 }
-
 
 .data-table {
   width: 100%;
@@ -84,7 +25,7 @@
 }
 
 .data-table th {
-  background: #dce1e4;//$table-header-bg;
+  background: #dce1e4; //$table-header-bg;
   font-weight: 600;
   font-size: 0.85rem;
   text-transform: uppercase;
@@ -162,32 +103,12 @@
   color: #4b5563;
 }
 
-.btn-pagination{
+.btn-pagination {
   padding: 0.4rem 0.9rem;
-    border: 1px solid #b02a374f;
-    border-radius: 0px;
-    background: #f1f5f9;
-    cursor: pointer;
-    font-size: 0.85rem;
-    color: #b02a37;
+  border: 1px solid #b02a374f;
+  border-radius: 0px;
+  background: #f1f5f9;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #b02a37;
 }
-
-// .btn-primary,
-// .btn-secondary {
-//   padding: 0.5rem 1.1rem;
-//   border-radius: 4px;
-//   font-size: 0.9rem;
-//   cursor: pointer;
-//   border: 1px solid transparent;
-// }
-
-// .btn-primary {
-//   background: #2563eb;
-//   color: #fff;
-// }
-
-// .btn-secondary {
-//   background: #fff;
-//   border-color: #d1d5db;
-//   color: #374151;
-// }

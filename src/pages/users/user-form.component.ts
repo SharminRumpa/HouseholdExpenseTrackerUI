@@ -11,7 +11,7 @@ import { DropdownItem } from '../../models/lookup';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './user-form.component.html',
-  styleUrls: ['./user-form.component.scss']
+  styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -37,7 +37,7 @@ export class UserFormComponent implements OnInit {
     email: ['', [Validators.required, Validators.email]],
     mobileNumber: [''],
     password: ['', [Validators.required, Validators.minLength(6)]],
-    roleId: [null as number | null, Validators.required]
+    roleId: [null as number | null, Validators.required],
   });
 
   ngOnInit(): void {
@@ -47,7 +47,7 @@ export class UserFormComponent implements OnInit {
       name: this.userToEdit.name,
       email: this.userToEdit.email,
       mobileNumber: this.userToEdit.mobileNumber ?? '',
-      roleId: this.userToEdit.roleId
+      roleId: this.userToEdit.roleId,
     });
 
     // Editing: password is optional — leave it blank to keep the current one.
@@ -75,14 +75,14 @@ export class UserFormComponent implements OnInit {
           email: raw.email,
           mobileNumber: raw.mobileNumber || null,
           roleId: raw.roleId!,
-          ...(raw.password ? { password: raw.password } : {})
+          ...(raw.password ? { password: raw.password } : {}),
         })
       : this.userService.create({
           name: raw.name,
           email: raw.email,
           mobileNumber: raw.mobileNumber || null,
           password: raw.password,
-          roleId: raw.roleId!
+          roleId: raw.roleId!,
         });
 
     request$.subscribe({
@@ -95,9 +95,9 @@ export class UserFormComponent implements OnInit {
         this.errorMessage.set(
           err?.status === 409
             ? 'A user with this email already exists.'
-            : `Failed to ${this.isEditMode ? 'update' : 'save'} user. Please try again.`
+            : `Failed to ${this.isEditMode ? 'update' : 'save'} user. Please try again.`,
         );
-      }
+      },
     });
   }
 

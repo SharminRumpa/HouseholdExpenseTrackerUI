@@ -1,13 +1,10 @@
 <div class="modal-backdrop" (click)="cancel()">
   <div class="modal-panel" (click)="$event.stopPropagation()">
-
-    
-  <div class="modal-header">
-      <h2>Add Expense</h2>
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Update Expense' : 'Add New Expense' }}</h2>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
-
       <div class="field-row">
         <div class="field">
           <label for="expenseCategoryId">Category <span class="required">*</span></label>
@@ -17,15 +14,23 @@
               {{ category.name }}
             </option>
           </select>
-          <span class="field-error" *ngIf="form.controls.expenseCategoryId.touched && form.controls.expenseCategoryId.invalid">
+          <span
+            class="field-error"
+            *ngIf="
+              form.controls.expenseCategoryId.touched && form.controls.expenseCategoryId.invalid
+            "
+          >
             Category is required.
           </span>
         </div>
 
-         <div class="field">
+        <div class="field">
           <label for="expenseDate">Expense Date <span class="required">*</span></label>
           <input id="expenseDate" type="date" formControlName="expenseDate" />
-          <span class="field-error" *ngIf="form.controls.expenseDate.touched && form.controls.expenseDate.invalid">
+          <span
+            class="field-error"
+            *ngIf="form.controls.expenseDate.touched && form.controls.expenseDate.invalid"
+          >
             Expense date is required.
           </span>
         </div>
@@ -35,35 +40,57 @@
         <div class="field">
           <label for="expenseSubCategoryId">Sub Category <span class="required">*</span></label>
           <select id="expenseSubCategoryId" formControlName="expenseSubCategoryId">
-            <option [ngValue]="null">Select a sub category</option>
+            <option [ngValue]="null" disabled>Select a sub category</option>
             <option *ngFor="let sub of subCategories()" [ngValue]="sub.id">
               {{ sub.name }}
             </option>
           </select>
+          <span
+            class="field-error"
+            *ngIf="
+              form.controls.expenseSubCategoryId.touched &&
+              form.controls.expenseSubCategoryId.invalid
+            "
+          >
+            Sub category is required.
+          </span>
         </div>
 
         <div class="field">
           <label for="expenseItemId">Category Item <span class="required">*</span></label>
           <select id="expenseItemId" formControlName="expenseItemId">
-            <option [ngValue]="null">Select an item</option>
+            <option [ngValue]="null" disabled>Select an item</option>
             <option *ngFor="let item of expenseItems()" [ngValue]="item.id">
               {{ item.name }}
             </option>
           </select>
+          <span
+            class="field-error"
+            *ngIf="form.controls.expenseItemId.touched && form.controls.expenseItemId.invalid"
+          >
+            Category item is required.
+          </span>
         </div>
       </div>
 
       <div class="field-row">
-         <div class="field">
+        <div class="field">
           <label for="paymentMethod">Payment Method</label>
-          <input id="paymentMethod" type="text" formControlName="paymentMethod" placeholder="e.g. Cash, bKash" />
+          <input
+            id="paymentMethod"
+            type="text"
+            formControlName="paymentMethod"
+            placeholder="e.g. Cash, bKash"
+          />
         </div>
-
 
         <div class="field">
           <label for="amount">Amount <span class="required">*</span></label>
           <input id="amount" type="number" step="0.01" min="0" formControlName="amount" />
-          <span class="field-error" *ngIf="form.controls.amount.touched && form.controls.amount.invalid">
+          <span
+            class="field-error"
+            *ngIf="form.controls.amount.touched && form.controls.amount.invalid"
+          >
             Enter an amount greater than 0.
           </span>
         </div>
@@ -71,7 +98,7 @@
 
       <div class="field-row">
         <div class="field">
-          <label for="quantity">Quantity </label>
+          <label for="quantity">Quantity</label>
           <input id="quantity" type="number" step="0.001" min="0" formControlName="quantity" />
         </div>
 
@@ -89,7 +116,12 @@
 
         <div class="field">
           <label for="weightUnit">Weight Unit</label>
-          <input id="weightUnit" type="text" formControlName="weightUnit" placeholder="e.g. kg, g, L" />
+          <input
+            id="weightUnit"
+            type="text"
+            formControlName="weightUnit"
+            placeholder="e.g. kg, g, L"
+          />
         </div>
       </div>
 
@@ -113,13 +145,13 @@
       <p class="form-error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-cancel" (click)="cancel()" [disabled]="isSaving()">Cancel</button>
+        <button type="button" class="btn btn-cancel" (click)="cancel()" [disabled]="isSaving()">
+          Cancel
+        </button>
         <button type="submit" class="btn btn-save" [disabled]="isSaving()">
-          {{ isSaving() ? 'Saving...' : 'Save' }}
+          {{ isSaving() ? 'Saving...' : isEditMode ? 'Update' : 'Save' }}
         </button>
       </div>
-
     </form>
-
   </div>
 </div>

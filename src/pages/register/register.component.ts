@@ -9,28 +9,24 @@ import { AuthService } from '../../core/services/auth.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss'
+  styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
-
-private fb = inject(FormBuilder);
+  private fb = inject(FormBuilder);
   constructor(
     private auth: AuthService,
-    private router: Router) { }
+    private router: Router,
+  ) {}
 
   form = this.fb.group({
     name: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     mobileNumber: [''],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+    password: ['', [Validators.required, Validators.minLength(6)]],
   });
 
   loading = false;
   errorMessage: string | null = null;
-
-
-
-
 
   submit(): void {
     if (this.form.invalid) {

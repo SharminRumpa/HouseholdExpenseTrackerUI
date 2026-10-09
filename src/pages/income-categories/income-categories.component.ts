@@ -1,5 +1,5 @@
-import { Component, OnInit, inject,signal  } from '@angular/core';
-import { finalize , } from 'rxjs/operators'; // Add this import at the top
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { finalize } from 'rxjs/operators'; // Add this import at the top
 import { CommonModule } from '@angular/common';
 import { forkJoin } from 'rxjs';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -11,10 +11,9 @@ import { Category, CategoryUpdate, IncomeSource } from '../../models/category';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './income-categories.component.html',
-  styleUrl: './income-categories.component.scss'
+  styleUrl: './income-categories.component.scss',
 })
 export class IncomeCategoriesComponent implements OnInit {
- 
   incomeCategories = signal<Category[]>([]);
   categories = signal<Category[]>([]);
   incomeSources = signal<IncomeSource[]>([]);
@@ -23,7 +22,6 @@ export class IncomeCategoriesComponent implements OnInit {
 
   private categoryService = inject(CategoryService);
   private fb = inject(FormBuilder);
-
 
   loading = false;
   incomeSourcesLoading = false;
@@ -34,20 +32,20 @@ export class IncomeCategoriesComponent implements OnInit {
   form: FormGroup = this.fb.group({
     categoryName: ['', Validators.required],
     description: [''],
-    isActive: [true]
+    isActive: [true],
   });
- 
+
   ngOnInit(): void {
     this.loadData();
   }
- 
+
   loadData(): void {
     this.isLoading.set(true);
     this.errorMessage.set(null);
- 
+
     forkJoin({
       categories: this.categoryService.getIncomeCategories(),
-      sources: this.categoryService.getIncomeSources()
+      sources: this.categoryService.getIncomeSources(),
     }).subscribe({
       next: ({ categories, sources }) => {
         this.incomeCategories.set(categories);
@@ -58,54 +56,9 @@ export class IncomeCategoriesComponent implements OnInit {
       error: () => {
         this.errorMessage.set('Failed to load income categories and sources. Please try again.');
         this.isLoading.set(false);
-      }
+      },
     });
   }
-
-
-  // ngOnInit(): void {
-  //   console.log('Profile component is loading. Fetch data here!');
-  //   this.loadCategories();
-  //   //this.loadIncomeSources();
-  //    console.log(this.loading);
-  // }
-
-  
-
-  // loadCategories(): void {
-  //   this.loading = true;
-  //   this.errorMessage = null;
-  //   this.categoryService.getIncomeCategories().subscribe({
-  //     next: (c) => {
-  //       this.categories = c;
-  //       this.loading = false;
-  //       //console.log('Income categories loaded:', c);
-  //       //console.log('Income categories loaded:', this.categories);
-  //       //console.log('Income categories loaded:', this.categories.length);
-  //       //console.log('Income categories loaded:', this.loading);
-    
-       
-  //     },
-  //     error: () => {
-  //       this.errorMessage = 'Could not load income categories. Is the API running?';
-  //       this.loading = false;
-  //     }
-  //   });
-  // }
-
-  // loadIncomeSources(): void {
-  //   this.incomeSourcesLoading = true;
-  //   this.categoryService.getIncomeSources().subscribe({
-  //     next: (s) => {
-  //       this.incomeSources = s;
-  //       this.incomeSourcesLoading = false;
-  //     },
-  //     error: () => {
-  //       this.errorMessage = 'Could not load income sources. Is the API running?';
-  //       this.incomeSourcesLoading = false;
-  //     }
-  //   });
-  // }
 
   openCreateForm(): void {
     this.editingId = null;
@@ -118,7 +71,7 @@ export class IncomeCategoriesComponent implements OnInit {
     this.form.setValue({
       categoryName: c.categoryName,
       description: c.description ?? '',
-      isActive: c.isActive
+      isActive: c.isActive,
     });
     this.showForm = true;
   }
@@ -140,24 +93,27 @@ export class IncomeCategoriesComponent implements OnInit {
       const dto: CategoryUpdate = {
         categoryName: raw.categoryName,
         description: raw.description || null,
-        isActive: raw.isActive
+        isActive: raw.isActive,
       };
       this.categoryService.updateIncomeCategory(this.editingId, dto).subscribe({
         next: () => {
           this.cancelForm();
           ////this.loadCategories();
         },
-        error: () => (this.errorMessage.set('Could not save this income category.'))
+        error: () => this.errorMessage.set('Could not save this income category.'),
       });
     } else {
       this.categoryService
-        .createIncomeCategory({ categoryName: raw.categoryName, description: raw.description || null })
+        .createIncomeCategory({
+          categoryName: raw.categoryName,
+          description: raw.description || null,
+        })
         .subscribe({
           next: () => {
             this.cancelForm();
             //this.loadCategories();
           },
-          error: () => (this.errorMessage.set('Could not create this income category.'))
+          error: () => this.errorMessage.set('Could not create this income category.'),
         });
     }
   }

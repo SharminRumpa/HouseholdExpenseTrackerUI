@@ -9,7 +9,7 @@ import { RoleService } from '../../core/services/role.service';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './role-form.component.html',
-  styleUrls: ['./role-form.component.scss']
+  styleUrls: ['./role-form.component.scss'],
 })
 export class RoleFormComponent {
   private fb = inject(FormBuilder);
@@ -22,7 +22,7 @@ export class RoleFormComponent {
   errorMessage = signal<string | null>(null);
 
   form = this.fb.nonNullable.group({
-    roleName: ['', Validators.required]
+    roleName: ['', Validators.required],
   });
 
   submit(): void {

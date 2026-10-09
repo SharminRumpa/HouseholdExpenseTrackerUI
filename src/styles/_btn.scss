@@ -1,7 +1,7 @@
 // _buttons.scss
 @use 'variables' as *;
 
-.btn{
+.btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -41,8 +41,8 @@
 // ---- Action buttons --------------------------------------------------------
 
 // Search
-.btn-search{
-  @include btn-solid($btn-search-bg, $btn-search-hover)
+.btn-search {
+  @include btn-solid($btn-search-bg, $btn-search-hover);
 }
 
 //Add
@@ -52,7 +52,7 @@
 
 // Save
 .btn-save {
-   @include btn-solid($btn-success-bg, $btn-success-hover);
+  @include btn-solid($btn-success-bg, $btn-success-hover);
 }
 
 // Cancel / Remove action
@@ -67,10 +67,8 @@
 
 // Delete
 .btn-reset {
-   @include btn-solid($btn-reset-bg, $btn-reset-hover);
- }
-
-
+  @include btn-solid($btn-reset-bg, $btn-reset-hover);
+}
 
 // ---- Base -----------------------------------------------------------------
 %btn-base {
@@ -98,74 +96,16 @@
   }
 }
 
-// // ---- Solid button mixin ----------------------------------------------------
-// @mixin btn-solid($bg, $hover) {
-//   @extend %btn-base;
-//   background: $bg;
-//   color: $btn-text-light;
-
-//   &:hover:not(:disabled) {
-//     background: $hover;
-//   }
-// }
-
-// // ---- Action buttons --------------------------------------------------------
-// .btn-primary {
-//   @include btn-solid($btn-primary-bg, $btn-primary-hover);
-// }
-
-// // Search, Add
-// .btn-success {
-//   @include btn-solid($btn-success-bg, $btn-success-hover);
-// }
-
-// // Save, Create
-// .btn-danger {
-//   @include btn-solid($btn-danger-bg, $btn-danger-hover);
-// }
-
-
-
-// // Edit, Update
-// .btn-info {
-//   @include btn-solid($btn-info-bg, $btn-info-hover);
-// }
-
-// // View, Export
-
-// .btn-secondary {
-//   // Cancel, Reset
-//   @extend %btn-base;
-//   background: $btn-secondary-bg;
-//   border-color: $btn-secondary-border;
-//   color: $btn-secondary-text;
-
-//   &:hover:not(:disabled) {
-//     background: $btn-secondary-hover;
-//   }
-// }
-
-// .btn-search {
-//   @include btn-solid($btn-primary-bg, $btn-primary-hover);
-// }
-
-// // Search, Add
-// .btn-add {
-//   @include btn-solid($btn-success-bg, $btn-success-hover);
-// }
-
-// // Save, Create
-// .btn-danger {
-//   @include btn-solid($btn-danger-bg, $btn-danger-hover);
-// }
-
 // Delete
 
 //Table action buttons
 
 .row-actions {
   display: flex;
-  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem; /* Keeps clean spacing between buttons when you uncomment Delete */
+  text-align: right; /* Fallback for non-flex table cell contexts */
 }
 
 .icon-btn {
@@ -180,17 +120,20 @@
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
- 
+  transition:
+    background-color 0.15s ease,
+    box-shadow 0.15s ease,
+    opacity 0.15s ease;
+
   &:hover:not(:disabled) {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   }
- 
+
   &:focus-visible {
     outline: 2px solid $btn-focus-ring;
     outline-offset: 2px;
   }
- 
+
   &:disabled {
     opacity: $btn-disabled-opacity;
     cursor: not-allowed;
@@ -201,21 +144,21 @@
 // Edit / Update action
 .btn-edit {
   background: $btn-warning-bg;
- 
+
   &:hover:not(:disabled) {
     background: $btn-warning-hover;
   }
 }
- 
+
 // Delete / Remove action
 .btn-delete {
   background: $btn-danger-bg;
- 
+
   &:hover:not(:disabled) {
     background: $btn-danger-hover;
   }
 }
- 
+
 // Referenced in the HTML but wasn't actually defined anywhere.
 .visually-hidden {
   position: absolute;

@@ -10,33 +10,32 @@ import { switchMap } from 'rxjs';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrl: './login.component.scss',
 })
 export class LoginComponent {
-
- private fb = inject(FormBuilder);
+  private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
- 
+
   isLoggingIn = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
- 
+
   form = this.fb.nonNullable.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
   });
- 
+
   submit(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
- 
+
     this.isLoggingIn.set(true);
     this.errorMessage.set(null);
- 
+
     const { email, password } = this.form.getRawValue();
- 
+
     // Load the menu right after login succeeds, so the sidebar is ready
     // by the time we navigate into the app — not loaded after the fact.
     this.authService
@@ -53,9 +52,9 @@ export class LoginComponent {
           this.errorMessage.set(
             err?.status === 401
               ? 'Incorrect email or password.'
-              : 'Login failed. Please try again.'
+              : 'Login failed. Please try again.',
           );
-        }
+        },
       });
   }
 }

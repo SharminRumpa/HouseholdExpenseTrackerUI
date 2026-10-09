@@ -1,5 +1,4 @@
 <div class="role-page">
-
   <div class="page-header">
     <h1>Roles</h1>
     <button type="button" class="btn-primary" (click)="openCreateForm()">+ Add Role</button>
@@ -13,7 +12,6 @@
   </div>
 
   <ng-container *ngIf="!isLoading() && !errorMessage()">
-
     <table class="data-table" *ngIf="roles().length; else noRoles">
       <thead>
         <tr>
@@ -32,13 +30,12 @@
     <ng-template #noRoles>
       <p class="empty-message">No roles found.</p>
     </ng-template>
-
   </ng-container>
 
   <app-role-form
     *ngIf="showCreateForm()"
     (created)="onRoleCreated()"
-    (cancelled)="onCreateCancelled()">
+    (cancelled)="onCreateCancelled()"
+  >
   </app-role-form>
-
 </div>

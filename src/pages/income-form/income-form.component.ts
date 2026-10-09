@@ -3,14 +3,14 @@ import { Component, EventEmitter, Input, Output, inject, signal } from '@angular
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Income, IncomeCategoryOption } from '../../models/income';
 import { IncomeService } from '../../core/services/income.service';
-import { DropdownItem , MONTH_NAMES} from '../../models/lookup';
+import { DropdownItem, MONTH_NAMES } from '../../models/lookup';
 
 @Component({
   selector: 'app-income-form',
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './income-form.component.html',
-  styleUrls: ['./income-form.component.scss']
+  styleUrls: ['./income-form.component.scss'],
 })
 export class IncomeFormComponent {
   private fb = inject(FormBuilder);
@@ -21,12 +21,11 @@ export class IncomeFormComponent {
   @Output() created = new EventEmitter<Income>();
   @Output() cancelled = new EventEmitter<void>();
 
-   readonly months = MONTH_NAMES;
- 
+  readonly months = MONTH_NAMES;
+
   isSaving = signal<boolean>(false);
   errorMessage = signal<string | null>(null);
 
- 
   form = this.fb.nonNullable.group({
     incomeCategoryId: [null as number | null, Validators.required],
     incomeSourceId: [null as number | null],
@@ -35,7 +34,7 @@ export class IncomeFormComponent {
     actualDate: [''],
     amount: [null as number | null, [Validators.required, Validators.min(0.01)]],
     description: [''],
-    paymentMethod: ['']
+    paymentMethod: [''],
   });
 
   submit(): void {
@@ -49,25 +48,27 @@ export class IncomeFormComponent {
     this.isSaving.set(true);
     this.errorMessage.set(null);
 
-    this.incomeService.create({
-      incomeCategoryId: raw.incomeCategoryId!,
-      incomeSourceId: raw.incomeSourceId,
-      receivedDate: raw.receivedDate,
-      actualDate: raw.actualDate || null,
-      amount: raw.amount!,
-      description: raw.description || null,
-      paymentMethod: raw.paymentMethod || null,
-      Month: raw.receivedDate.substring(0, 7) // Extract yyyy-MM from receivedDate
-    }).subscribe({
-      next: (income) => {
-        this.isSaving.set(false);
-        this.created.emit(income);
-      },
-      error: () => {
-        this.isSaving.set(false);
-        this.errorMessage.set('Failed to save income. Please try again.');
-      }
-    });
+    this.incomeService
+      .create({
+        incomeCategoryId: raw.incomeCategoryId!,
+        incomeSourceId: raw.incomeSourceId,
+        receivedDate: raw.receivedDate,
+        actualDate: raw.actualDate || null,
+        amount: raw.amount!,
+        description: raw.description || null,
+        paymentMethod: raw.paymentMethod || null,
+        Month: raw.receivedDate.substring(0, 7), // Extract yyyy-MM from receivedDate
+      })
+      .subscribe({
+        next: (income) => {
+          this.isSaving.set(false);
+          this.created.emit(income);
+        },
+        error: () => {
+          this.isSaving.set(false);
+          this.errorMessage.set('Failed to save income. Please try again.');
+        },
+      });
   }
 
   cancel(): void {

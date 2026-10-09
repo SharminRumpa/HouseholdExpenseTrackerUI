@@ -1,4 +1,3 @@
-
 // Matches DropdownItemDto from the API — used for Income Categories,
 // Income Sources, Expense Categories, and Roles.
 export interface DropdownItem {
@@ -14,7 +13,23 @@ export interface ExpenseSubCategoryDropdown {
   expenseCategoryId: number;
 }
 
+export interface ResponseDto {
+  success: boolean;
+  message: string;
+  data?: any;
+}
+
 export const MONTH_NAMES: string[] = [
-  'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
+  'January',
+  'February',
+  'March',
+  'April',
+  'May',
+  'June',
+  'July',
+  'August',
+  'September',
+  'October',
+  'November',
+  'December',
 ];

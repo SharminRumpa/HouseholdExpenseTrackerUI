@@ -1,12 +1,10 @@
 <div class="modal-backdrop" (click)="cancel()">
   <div class="modal-panel" (click)="$event.stopPropagation()">
-
     <div class="modal-header">
       <h2>Add Income</h2>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
-
       <div class="field">
         <label for="incomeCategoryId">Category *</label>
         <select id="incomeCategoryId" formControlName="incomeCategoryId">
@@ -15,8 +13,10 @@
             {{ category.name }}
           </option>
         </select>
-        <span class="field-error"
-          *ngIf="form.get('incomeCategoryId')?.touched && form.get('incomeCategoryId')?.invalid">
+        <span
+          class="field-error"
+          *ngIf="form.get('incomeCategoryId')?.touched && form.get('incomeCategoryId')?.invalid"
+        >
           Category is required.
         </span>
       </div>
@@ -41,13 +41,14 @@
         </div>
       </div>
 
-
-
       <div class="field-row">
         <div class="field">
           <label for="receivedDate">Received Date *</label>
           <input id="receivedDate" type="date" formControlName="receivedDate" />
-          <span class="field-error" *ngIf="form.get('receivedDate')?.touched && form.get('receivedDate')?.invalid">
+          <span
+            class="field-error"
+            *ngIf="form.get('receivedDate')?.touched && form.get('receivedDate')?.invalid"
+          >
             Received date is required.
           </span>
         </div>
@@ -61,14 +62,22 @@
       <div class="field">
         <label for="amount">Amount *</label>
         <input id="amount" type="number" step="0.01" min="0" formControlName="amount" />
-        <span class="field-error" *ngIf="form.get('amount')?.touched && form.get('amount')?.invalid">
+        <span
+          class="field-error"
+          *ngIf="form.get('amount')?.touched && form.get('amount')?.invalid"
+        >
           Enter an amount greater than 0.
         </span>
       </div>
 
       <div class="field">
         <label for="paymentMethod">Payment Method</label>
-        <input id="paymentMethod" type="text" formControlName="paymentMethod" placeholder="e.g. Cash, Bank Transfer" />
+        <input
+          id="paymentMethod"
+          type="text"
+          formControlName="paymentMethod"
+          placeholder="e.g. Cash, Bank Transfer"
+        />
       </div>
 
       <div class="field">
@@ -79,13 +88,13 @@
       <p class="form-error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-cancel" (click)="cancel()" [disabled]="isSaving()">Cancel</button>
+        <button type="button" class="btn btn-cancel" (click)="cancel()" [disabled]="isSaving()">
+          Cancel
+        </button>
         <button type="submit" class="btn btn-save" [disabled]="isSaving()">
           {{ isSaving() ? 'Saving...' : 'Save' }}
         </button>
       </div>
-
     </form>
-
   </div>
 </div>

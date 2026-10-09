@@ -6,7 +6,7 @@ export interface Expense {
   expenseSubCategoryName?: string | null;
   expenseItemId?: number | null;
   expenseItemName?: string | null;
-  expenseDate: string;   // yyyy-MM-dd
+  expenseDate: string; // yyyy-MM-dd
   amount: number;
   quantity?: number | null;
   unit?: string | null;
@@ -23,7 +23,7 @@ export interface Expense {
 export interface ExpenseCreate {
   expenseCategoryId: number;
   expenseSubCategoryId?: number | null;
-   expenseItemId?: number | null;
+  expenseItemId?: number | null;
   expenseDate: string;
   amount: number;
   quantity?: number | null;
@@ -37,11 +37,14 @@ export interface ExpenseCreate {
 }
 
 export interface ExpenseSearchFilter {
-  fromDate?: string | null;   // yyyy-MM-dd
-  toDate?: string | null;     // yyyy-MM-dd
+  fromDate?: string | null; // yyyy-MM-dd
+  toDate?: string | null; // yyyy-MM-dd
   categoryId?: number | null;
 }
 
 export type ExpenseUpdate = ExpenseCreate;
 
-
+export interface ExpenseDeleteRequest {
+  id: number;
+  reason: string;
+}

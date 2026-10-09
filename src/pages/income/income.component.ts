@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { IncomeFormComponent } from '../income-form/income-form.component';
-import { Income, IncomeCategoryOption , IncomeSearchFilter } from '../../models/income';
+import { Income, IncomeCategoryOption, IncomeSearchFilter } from '../../models/income';
 import { DropdownItem } from '../../models/lookup';
 import { IncomeService } from '../../core/services/income.service';
 import { LookupService } from '../../core/services/lookup.service';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
 
 const PAGE_SIZE = 10;
 
@@ -15,14 +16,16 @@ const PAGE_SIZE = 10;
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, IncomeFormComponent],
   templateUrl: './income.component.html',
-  styleUrls: ['./income.component.scss']
+  styleUrls: ['./income.component.scss'],
 })
 export class IncomeComponent implements OnInit {
   private fb = inject(FormBuilder);
   private incomeService = inject(IncomeService);
   private lookupService = inject(LookupService);
+  private authService = inject(AuthService);
 
-  //categories = signal<IncomeCategoryOption[]>([]);
+  currentUser = this.authService.currentUser;
+
   categories = signal<DropdownItem[]>([]);
   incomeSources = signal<DropdownItem[]>([]);
   incomes = signal<Income[]>([]);
@@ -34,55 +37,39 @@ export class IncomeComponent implements OnInit {
   readonly pageSize = PAGE_SIZE;
 
   filterForm = this.fb.nonNullable.group({
-  fromDate: [this.firstOfMonth()],
-  toDate: [this.today()],
-  categoryId: [null as number | null]
-});
+    fromDate: [this.firstOfMonth()],
+    toDate: [this.today()],
+    categoryId: [null as number | null],
+  });
 
-
-  totalPages = computed(() =>
-    Math.max(1, Math.ceil(this.incomes().length / this.pageSize))
-  );
+  totalPages = computed(() => Math.max(1, Math.ceil(this.incomes().length / this.pageSize)));
 
   pagedIncomes = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize;
     return this.incomes().slice(start, start + this.pageSize);
   });
 
-   // Total of all rows matching the current filters (not just the visible page).
-  totalAmount = computed(() =>
-    this.incomes().reduce((sum, expense) => sum + expense.amount, 0)
-  );
+  // Total of all rows matching the current filters (not just the visible page).
+  totalAmount = computed(() => this.incomes().reduce((sum, expense) => sum + expense.amount, 0));
 
-  // ngOnInit(): void {
-  //   this.loadCategories();
-  //   this.loadIncomes();
-  // }
-
-   ngOnInit(): void {
+  ngOnInit(): void {
     this.loadLookups();
     this.loadIncomes();
   }
-  
+
   loadLookups(): void {
     forkJoin({
       categories: this.lookupService.getIncomeCategories(),
-      sources: this.lookupService.getIncomeSources()
+      sources: this.lookupService.getIncomeSources(),
     }).subscribe({
       next: ({ categories, sources }) => {
         this.categories.set(categories);
         this.incomeSources.set(sources);
         console.log(sources);
         console.log(this.incomeSources());
-      }
+      },
     });
   }
-
-  // loadCategories(): void {
-  //   this.lookupService.getIncomeCategories().subscribe({
-  //     next: (categories) => this.categories.set(categories)
-  //   });
-  // }
 
   loadIncomes(): void {
     this.isLoading.set(true);
@@ -99,7 +86,7 @@ export class IncomeComponent implements OnInit {
       error: () => {
         this.errorMessage.set('Failed to load income records. Please try again.');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -138,15 +125,15 @@ export class IncomeComponent implements OnInit {
     this.showCreateForm.set(false);
   }
 
-    private today(): string {
+  private today(): string {
     return this.toDateString(new Date());
   }
- 
+
   private firstOfMonth(): string {
     const now = new Date();
     return this.toDateString(new Date(now.getFullYear(), now.getMonth(), 1));
   }
- 
+
   private toDateString(date: Date): string {
     // Built from local date parts (not toISOString()) so the value matches
     // the user's actual calendar day regardless of UTC offset.

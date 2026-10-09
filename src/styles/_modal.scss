@@ -1,136 +1,175 @@
 @use 'variables' as *;
 
 .modal-backdrop {
-    position: fixed;
-    //position: relative;
-    inset: 0;
-    background: rgba(17, 24, 39, 0.5);
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 3rem 1rem;
-    z-index: 1000;
+  position: fixed;
+  //position: relative;
+  inset: 0;
+  background: rgba(17, 24, 39, 0.5);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 1rem;
+  z-index: 1000;
 }
 
 .modal-panel {
-    background: #fff;
-    //border-radius: 8px;
-    padding: 1.5rem;
-    width: 100%;
-    max-width: 600px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  background: #fff;
+  //border-radius: 8px;
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 600px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 
-    .field {
-        margin: 0 0 0.8rem;
-    }
+  .field {
+    margin: 0 0 0.8rem;
+  }
 }
 
 .modal-header {
+  background-color: #f1f5f9;
+  margin-bottom: 1rem;
+  padding: 4px 0px;
+  text-align: center;
 
-    background-color: #f1f5f9;
-    margin-bottom: 1rem;
-    padding: 4px 0px;
+  h2 {
     text-align: center;
-
-    h2 {
-        text-align: center;
-        font-size: 1.3rem;
-    }
+    font-size: 1.3rem;
+  }
 }
 
 .field-error {
-    color: $field-error;
-    /* Error text color */
-    font-size: 0.875rem;
-    display: block;
-    margin-top: 4px;
+  color: $field-error;
+  /* Error text color */
+  font-size: 0.875rem;
+  display: block;
+  margin-top: 4px;
 }
 
 .required {
-    color: #dc2626;
-    /* Red */
-    margin-left: 2px;
+  color: #dc2626;
+  /* Red */
+  margin-left: 2px;
 }
 
-.message {
+// .message {
+//   margin: 0 0 1rem;
+//   font-size: 1rem;
+//   color: #760d17;
+// }
+
+// .dialog-body {
+//   .message {
+//     font-size: 0.9rem;
+//     color: #201f1f;
+//   }
+
+//   p {
+//     margin: 0 0 1rem;
+//     font-size: 1rem;
+//     color: #760d17;
+//   }
+// }
+
+.dialog-body {
+  // Styles for base paragraph container
+  ::ng-deep p {
     margin: 0 0 1rem;
-    font-size: 1rem;
-    color: #760d17;
+    font-size: 0.9rem;
+    color: #b61424; // Neutral dark gray for primary question text
+
+    // Target the injected .message class inside [innerHTML]
+    .message {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-size: 0.95rem;
+      color: #201f1f; // Dark black/gray for specific expense details
+
+      strong {
+        color: #000;
+        font-weight: 600;
+      }
+    }
+
+    // Target the warning message at the end
+    .text-danger {
+      color: #760d17; // Keep the red highlight for "cannot be undone"
+      font-weight: 600;
+    }
+  }
 }
 
 .form-error {
-    color: #580f17;
-    font-size: 0.85rem;
-    margin: 0 0 0.75rem;
+  color: #580f17;
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
 }
 
 .form-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.6rem;
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
 }
 
 input,
 select,
 textarea {
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    padding: 7px 10px;
-    background: var(--surface);
-    color: $lbl-text;
-    width: 100%;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 7px 10px;
+  background: var(--surface);
+  color: $lbl-text;
+  width: 100%;
 }
 
 input:focus,
 select:focus,
 textarea:focus {
-    outline: none;
-    border-color: var(--ink);
+  outline: none;
+  border-color: var(--ink);
 }
 
 label {
-    display: block;
-    font-size: 12px;
-    color: $lbl-text;
-    margin-bottom: 4px;
-    font-weight: 600;
+  display: block;
+  font-size: 12px;
+  color: $lbl-text;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 
 .modal-close {
-    position: absolute;
-    top: 12px;
-    right: 16px;
+  position: absolute;
+  top: 12px;
+  right: 16px;
 
-    width: 32px;
-    height: 32px;
+  width: 32px;
+  height: 32px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-    padding: 0;
-    border: none;
-    background: transparent;
+  padding: 0;
+  border: none;
+  background: transparent;
 
-    color: #a80303;
-    font-size: 28px;
-    font-weight: 400;
-    line-height: 1;
+  color: #a80303;
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 1;
 
-    cursor: pointer;
+  cursor: pointer;
 
-    &:hover:not(:disabled) {
-        color: #111827;
-        background: #f3f4f6;
-        border-radius: 50%;
-    }
+  &:hover:not(:disabled) {
+    color: #111827;
+    background: #f3f4f6;
+    border-radius: 50%;
+  }
 
-    &:disabled {
-        color: #d1d5db;
-        cursor: not-allowed;
-    }
+  &:disabled {
+    color: #d1d5db;
+    cursor: not-allowed;
+  }
 }
-
 
 .field {
   margin-bottom: 1rem;

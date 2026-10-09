@@ -1,12 +1,10 @@
 <div class="modal-backdrop" (click)="cancel()">
   <div class="modal-panel" (click)="$event.stopPropagation()">
-
     <div class="modal-header">
       <h2>{{ isEditMode ? 'Update User' : 'Add New User' }}</h2>
     </div>
 
     <form [formGroup]="form" (ngSubmit)="submit()">
-
       <div class="field">
         <label for="name">Name <span class="required">*</span></label>
         <input id="name" type="text" formControlName="name" />
@@ -18,10 +16,16 @@
       <div class="field">
         <label for="email">Email <span class="required">*</span></label>
         <input id="email" type="email" formControlName="email" />
-        <span class="field-error" *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']">
+        <span
+          class="field-error"
+          *ngIf="form.controls.email.touched && form.controls.email.errors?.['required']"
+        >
           Email is required.
         </span>
-        <span class="field-error" *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']">
+        <span
+          class="field-error"
+          *ngIf="form.controls.email.touched && form.controls.email.errors?.['email']"
+        >
           Enter a valid email address.
         </span>
       </div>
@@ -34,14 +38,20 @@
       <div class="field">
         <label for="password">
           {{ isEditMode ? 'New Password' : 'Password' }}
-          <span class="hint" *ngIf="isEditMode">(leave blank to keep current)</span><span class="required">*</span>
+          <span class="hint" *ngIf="isEditMode">(leave blank to keep current)</span
+          ><span class="required">*</span>
         </label>
         <input id="password" type="password" formControlName="password" />
-        <span class="field-error" *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']">
+        <span
+          class="field-error"
+          *ngIf="form.controls.password.touched && form.controls.password.errors?.['required']"
+        >
           Password is required.
         </span>
-        <span class="field-error"
-          *ngIf="form.controls.password.touched && form.controls.password.errors?.['minlength']">
+        <span
+          class="field-error"
+          *ngIf="form.controls.password.touched && form.controls.password.errors?.['minlength']"
+        >
           Password must be at least 6 characters.
         </span>
       </div>
@@ -54,7 +64,10 @@
             {{ role.name }}
           </option>
         </select>
-        <span class="field-error" *ngIf="form.controls.roleId.touched && form.controls.roleId.invalid">
+        <span
+          class="field-error"
+          *ngIf="form.controls.roleId.touched && form.controls.roleId.invalid"
+        >
           Role is required.
         </span>
       </div>
@@ -62,13 +75,13 @@
       <p class="form-error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
 
       <div class="form-actions">
-        <button type="button" class="btn btn-cancel" (click)="cancel()" [disabled]="isSaving()">Cancel</button>
+        <button type="button" class="btn btn-cancel" (click)="cancel()" [disabled]="isSaving()">
+          Cancel
+        </button>
         <button type="submit" class="btn btn-save" [disabled]="isSaving()">
-          {{ isSaving() ? 'Saving...' : (isEditMode ? 'Update' : 'Save') }}
+          {{ isSaving() ? 'Saving...' : isEditMode ? 'Update' : 'Save' }}
         </button>
       </div>
-
     </form>
-
   </div>
 </div>

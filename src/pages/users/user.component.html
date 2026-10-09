@@ -1,8 +1,7 @@
 <div class="user-page" id="page-main-content">
-
-   <div class="modal-header">
-      <h2 class="table-title">User List</h2>
-    </div>
+  <div class="modal-header">
+    <h2 class="table-title">User List</h2>
+  </div>
 
   <div *ngIf="isLoading()" class="state-message">Loading...</div>
 
@@ -12,7 +11,6 @@
   </div>
 
   <ng-container *ngIf="!isLoading() && !errorMessage()">
-
     <div class="table-wrapper" *ngIf="users().length; else noUsers">
       <table class="data-table">
         <thead>
@@ -33,7 +31,9 @@
             <td>{{ user.name }}</td>
             <td>{{ user.email }}</td>
             <td>{{ user.mobileNumber || '—' }}</td>
-            <td><span class="badge">{{ user.roleName }}</span></td>
+            <td>
+              <span class="badge">{{ user.roleName }}</span>
+            </td>
             <td>{{ user.createdAt | date: 'mediumDate' }}</td>
             <td>{{ user.lastUpdatedAt | date: 'mediumDate' }}</td>
             <td class="row-actions">
@@ -54,11 +54,24 @@
     </ng-template>
 
     <div class="pagination" *ngIf="users().length">
-      <button type="button" (click)="previousPage()" [disabled]="currentPage() === 1">Previous</button>
+      <button
+        type="button"
+        class="btn btn-pagination"
+        (click)="previousPage()"
+        [disabled]="currentPage() === 1"
+      >
+        Previous
+      </button>
       <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
-      <button type="button" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+      <button
+        type="button"
+        class="btn btn-pagination"
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Next
+      </button>
     </div>
-
   </ng-container>
 
   <div class="page-footer">
@@ -70,9 +83,10 @@
     [roles]="roles()"
     [userToEdit]="userBeingEdited()"
     (saved)="onUserSaved()"
-    (cancelled)="onFormCancelled()">
+    (cancelled)="onFormCancelled()"
+  >
   </app-user-form>
- 
+
   <app-confirm-dialog
     *ngIf="userPendingDelete() as user"
     title="Delete User"
@@ -81,7 +95,7 @@
     [isProcessing]="isDeleting()"
     [errorMessage]="deleteErrorMessage()"
     (confirmed)="confirmDelete()"
-    (cancelled)="cancelDelete()">
+    (cancelled)="cancelDelete()"
+  >
   </app-confirm-dialog>
- 
 </div>

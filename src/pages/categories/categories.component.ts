@@ -1,9 +1,10 @@
-import { Component, OnInit, inject, signal,computed} from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoryService } from '../../core/services/category.service';
 import { Category, CategoryUpdate, IncomeSource, SubCategory } from '../../models/category';
 import { forkJoin } from 'rxjs';
+import { AuthService } from '../../core/services/auth.service';
 
 const PAGE_SIZE = 10;
 
@@ -16,12 +17,15 @@ const PAGE_SIZE = 10;
 })
 export class CategoriesComponent implements OnInit {
 
+  private categoryService = inject(CategoryService);
+  private authService = inject(AuthService);
+
   expenseCategories = signal<Category[]>([]);
   isLoading = signal<boolean>(true);
   errorMessage = signal<string | null>(null);
   currentPage = signal<number>(1);
-
-  private categoryService = inject(CategoryService);
+  currentUser = this.authService.currentUser;
+  loading = false;
 
   readonly pageSize = PAGE_SIZE;
 
@@ -34,32 +38,30 @@ export class CategoriesComponent implements OnInit {
     return this.expenseCategories().slice(start, start + this.pageSize);
   });
 
-  loading = false;
-
   ngOnInit(): void {
     this.loadData();
   }
 
   loadData(): void {
-      this.isLoading.set(true);
-      this.errorMessage.set(null);
-   
-      forkJoin({
-        categories: this.categoryService.getExpenseCategories()
-      }).subscribe({
-        next: ({ categories }) => {
-          this.expenseCategories.set(categories);
-          this.currentPage.set(1);
-          console.log('Expense categories loaded successfully:', this.pageSize);
-          this.isLoading.set(false);
-          console.log('Income categories and sources loaded successfully.');
-        },
-        error: () => {
-          this.errorMessage.set('Failed to load income categories and sources. Please try again.');
-          this.isLoading.set(false);
-        }
-      });
-    }
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    forkJoin({
+      categories: this.categoryService.getExpenseCategories()
+    }).subscribe({
+      next: ({ categories }) => {
+        this.expenseCategories.set(categories);
+        this.currentPage.set(1);
+        console.log('Expense categories loaded successfully:', this.pageSize);
+        this.isLoading.set(false);
+        console.log('Income categories and sources loaded successfully.');
+      },
+      error: () => {
+        this.errorMessage.set('Failed to load income categories and sources. Please try again.');
+        this.isLoading.set(false);
+      }
+    });
+  }
 
   goToPage(page: number): void {
     if (page < 1 || page > this.totalPages()) return;
@@ -76,8 +78,4 @@ export class CategoriesComponent implements OnInit {
     this.goToPage(this.currentPage() - 1);
   }
 
-  
-
-
-  
 }

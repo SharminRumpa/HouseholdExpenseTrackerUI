@@ -1,6 +1,5 @@
 <div class="income-page" id="page-main-content">
-
-    <div class="modal-header">
+  <div class="modal-header">
     <h2 class="table-title">Income Details</h2>
   </div>
 
@@ -39,15 +38,15 @@
   </div>
 
   <ng-container *ngIf="!isLoading() && !errorMessage()">
-
-     <div class="summary" *ngIf="incomes().length">
-      Total {{ incomes().length }} records income sum: <strong>{{ totalAmount() | number: '1.2-2' }}</strong>
+    <div class="summary" *ngIf="incomes().length">
+      Total {{ incomes().length }} records income sum:
+      <strong>{{ totalAmount() | number: '1.2-2' }}</strong>
     </div>
 
     <table class="data-table" *ngIf="incomes().length; else noIncomes">
       <thead>
         <tr>
-           <th class="num">#</th>
+          <th class="num">#</th>
           <th>Received Date</th>
           <th>Category</th>
           <th>Source</th>
@@ -74,19 +73,47 @@
     </ng-template>
 
     <div class="pagination" *ngIf="incomes().length">
-      <button type="button" (click)="previousPage()" [disabled]="currentPage() === 1">Previous</button>
+      <button
+        type="button"
+        class="btn btn-pagination"
+        (click)="previousPage()"
+        [disabled]="currentPage() === 1"
+      >
+        Previous
+      </button>
       <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
-      <button type="button" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+      <button
+        type="button"
+        class="btn btn-pagination"
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Next
+      </button>
     </div>
-
   </ng-container>
 
-  <div class="page-footer">
+  <!-- <div class="page-footer">
     <button type="button" class="btn btn-add" (click)="openCreateForm()">+ Add New</button>
+  </div> -->
+
+  <div class="page-footer" *ngIf="currentUser() as user">
+    <button
+      type="button"
+      class="btn btn-add"
+      *ngIf="user.roleName !== 'Viewer'"
+      (click)="openCreateForm()"
+    >
+      + Add New
+    </button>
   </div>
 
-  <app-income-form *ngIf="showCreateForm()" [categories]="categories()" [incomeSources]="incomeSources()"
-    (created)="onIncomeCreated()" (cancelled)="onCreateCancelled()">
+  <app-income-form
+    *ngIf="showCreateForm()"
+    [categories]="categories()"
+    [incomeSources]="incomeSources()"
+    (created)="onIncomeCreated()"
+    (cancelled)="onCreateCancelled()"
+  >
   </app-income-form>
-
 </div>

@@ -1,0 +1,91 @@
+<div class="modal-backdrop" (click)="cancel()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>{{ isEditMode ? 'Update Expense Item' : 'Add New Expense Item' }}</h2>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field-row">
+        <div class="field">
+          <label for="expenseCategoryId">Master Category <span class="required">*</span></label>
+          <select id="expenseCategoryId" formControlName="expenseCategoryId">
+            <option [ngValue]="null" disabled>Select a category</option>
+            <option *ngFor="let category of categories" [ngValue]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+          <span
+            class="field-error"
+            *ngIf="
+              form.controls.expenseCategoryId.touched && form.controls.expenseCategoryId.invalid
+            "
+          >
+            Category is required.
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="expenseSubCategoryId">Sub Category <span class="required">*</span></label>
+          <select id="expenseSubCategoryId" formControlName="expenseSubCategoryId">
+            <option [ngValue]="null" disabled>Select a sub category</option>
+            <option *ngFor="let sub of subCategories()" [ngValue]="sub.id">
+              {{ sub.name }}
+            </option>
+          </select>
+          <span
+            class="field-error"
+            *ngIf="
+              form.controls.expenseSubCategoryId.touched &&
+              form.controls.expenseSubCategoryId.invalid
+            "
+          >
+            Sub category is required.
+          </span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="itemName">Expense Item <span class="required">*</span></label>
+        <input
+          id="itemName"
+          type="text"
+          formControlName="itemName"
+          maxlength="150"
+          placeholder="e.g. Rice, Electricity bill"
+        />
+        <span
+          class="field-error"
+          *ngIf="form.controls.itemName.touched && form.controls.itemName.invalid"
+        >
+          Item name is required.
+        </span>
+      </div>
+
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          rows="2"
+          maxlength="500"
+        ></textarea>
+      </div>
+
+      <label class="checkbox-field" for="isActive">
+        <input id="isActive" type="checkbox" formControlName="isActive" />
+        <span>Active</span>
+      </label>
+
+      <p class="form-error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancel()" [disabled]="isSaving()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-save" [disabled]="isSaving()">
+          {{ isSaving() ? 'Saving...' : isEditMode ? 'Update' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

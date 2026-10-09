@@ -14,7 +14,7 @@ const PAGE_SIZE = 10;
   standalone: true,
   imports: [CommonModule, UserFormComponent, ConfirmDialogComponent],
   templateUrl: './user.component.html',
-  styleUrls: ['./user.component.scss']
+  styleUrls: ['./user.component.scss'],
 })
 export class UserComponent implements OnInit {
   private userService = inject(UserService);
@@ -43,9 +43,7 @@ export class UserComponent implements OnInit {
 
   readonly pageSize = PAGE_SIZE;
 
-  totalPages = computed(() =>
-    Math.max(1, Math.ceil(this.users().length / this.pageSize))
-  );
+  totalPages = computed(() => Math.max(1, Math.ceil(this.users().length / this.pageSize)));
 
   pagedUsers = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize;
@@ -59,7 +57,7 @@ export class UserComponent implements OnInit {
 
   loadRoles(): void {
     this.lookupService.getRoles().subscribe({
-      next: (roles) => this.roles.set(roles)
+      next: (roles) => this.roles.set(roles),
     });
   }
 
@@ -76,7 +74,7 @@ export class UserComponent implements OnInit {
       error: () => {
         this.errorMessage.set('Failed to load users. Please try again.');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -137,7 +135,7 @@ export class UserComponent implements OnInit {
       error: () => {
         this.isDeleting.set(false);
         this.deleteErrorMessage.set('Failed to delete user. Please try again.');
-      }
+      },
     });
   }
 

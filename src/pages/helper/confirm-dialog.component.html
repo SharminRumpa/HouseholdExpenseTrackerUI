@@ -1,22 +1,65 @@
 <div class="modal-backdrop" (click)="onBackdropClick()">
-  <div class="modal-panel" (click)="$event.stopPropagation()">
-
-    <div class="modal-header">
+  <div class="modal-panel" (click)="$event.stopPropagation()" role="dialog">
+    <header class="modal-header">
       <h2>{{ title }}</h2>
+    </header>
+
+    <div class="dialog-body">
+      <!-- Injected HTML Message -->
+      <p [innerHTML]="message"></p>
+
+      <!-- Conditional Remarks Input -->
+      <form *ngIf="showRemarks" [formGroup]="remarksForm" class="remarks-container">
+        <label for="remarks"
+          >{{ remarksLabel }} <span *ngIf="remarksRequired" class="required">*</span></label
+        >
+        <textarea
+          id="remarks"
+          formControlName="remarks"
+          rows="3"
+          [placeholder]="remarksPlaceholder"
+          [class.is-invalid]="
+            remarksForm.controls.remarks.touched && remarksForm.controls.remarks.invalid
+          "
+        ></textarea>
+        <small
+          *ngIf="
+            remarksForm.controls.remarks.touched &&
+            remarksForm.controls.remarks.errors?.['required']
+          "
+          class="error-text"
+        >
+          Remarks are required to complete this action.
+        </small>
+        <small
+          *ngIf="
+            remarksForm.controls.remarks.touched &&
+            remarksForm.controls.remarks.errors?.['minlength']
+          "
+          class="error-text"
+        >
+          Must be at least 5 characters long.
+        </small>
+      </form>
+
+      <!-- Error Message Banner -->
+      <div *ngIf="errorMessage" class="error-banner">
+        {{ errorMessage }}
+      </div>
     </div>
-   
-    <p class="message">{{ message }}</p>
 
-    <p class="form-error" *ngIf="errorMessage">{{ errorMessage }}</p>
-
-     <div class="form-actions">
-        <button type="button" class="btn btn-cancel" (click)="cancelled.emit()" [disabled]="isProcessing">
+    <div class="form-actions">
+      <button
+        type="button"
+        class="btn btn-cancel"
+        (click)="cancelled.emit()"
+        [disabled]="isProcessing"
+      >
         {{ cancelLabel }}
       </button>
-       <button type="button" class="btn btn-delete" (click)="confirmed.emit()" [disabled]="isProcessing">
+      <button type="button" class="btn btn-delete" (click)="onConfirm()" [disabled]="isProcessing">
         {{ isProcessing ? 'Deleting...' : confirmLabel }}
-      </button>       
-      </div>
-
+      </button>
+    </div>
   </div>
 </div>

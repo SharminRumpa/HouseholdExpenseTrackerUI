@@ -1,0 +1,140 @@
+<div class="expense-item-page" id="page-main-content">
+  <div class="modal-header">
+    <h2 class="table-title">Expense Item List</h2>
+  </div>
+
+  <div *ngIf="isLoading()" class="state-message">Loading...</div>
+
+  <div *ngIf="errorMessage()" class="state-message error">
+    {{ errorMessage() }}
+    <button type="button" class="retry-btn" (click)="loadItems()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && !errorMessage()">
+    <!-- Live Search Box Toolbar -->
+    <div class="table-toolbar" *ngIf="items().length">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search by category, sub-category, item, or description..."
+          [ngModel]="searchQuery()"
+          (ngModelChange)="onSearchChange($event)"
+        />
+        <button
+          type="button"
+          class="clear-btn"
+          *ngIf="searchQuery()"
+          (click)="clearSearch()"
+          title="Clear search"
+        >
+          &times;
+        </button>
+      </div>
+      <span class="results-count" *ngIf="searchQuery()">
+        Found {{ filteredItems().length }} result(s)
+      </span>
+    </div>
+
+    <div class="table-wrapper" *ngIf="items().length; else noItems">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Master Category</th>
+            <th>Sub Category</th>
+            <th>Expense Item</th>
+            <th>Description</th>
+            <th>Is Active</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let item of pagedItems(); let i = index"
+            [class.inactive-row]="!item.isActive"
+          >
+            <td class="num">{{ rowNumberOffset() + i + 1 }}</td>
+            <td>{{ item.expenseCategoryName }}</td>
+            <td>{{ item.expenseSubCategoryName }}</td>
+            <td>{{ item.itemName }}</td>
+            <td class="description" [title]="item.description || ''">
+              {{ item.description || '—' }}
+            </td>
+            <td>
+              <span
+                class="badge"
+                [class.badge-active]="item.isActive"
+                [class.badge-inactive]="!item.isActive"
+              >
+                {{ item.isActive ? 'Active' : 'Inactive' }}
+              </span>
+            </td>
+            <td class="row-actions">
+              <button class="icon-btn btn-edit" title="Edit" (click)="startEdit(item)">
+                ✎ <span class="visually-hidden">Edit</span>
+              </button>
+              <button class="icon-btn btn-delete" title="Delete" (click)="remove(item)">
+                🗑 <span class="visually-hidden">Delete</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noItems>
+      <p class="empty-message">No expense items found.</p>
+    </ng-template>
+
+    <div class="pagination" *ngIf="items().length">
+      <button
+        type="button"
+        class="btn btn-pagination"
+        (click)="previousPage()"
+        [disabled]="currentPage() === 1"
+      >
+        Previous
+      </button>
+      <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+      <button
+        type="button"
+        class="btn btn-pagination"
+        (click)="nextPage()"
+        [disabled]="currentPage() === totalPages()"
+      >
+        Next
+      </button>
+    </div>
+  </ng-container>
+
+  <div class="page-footer">
+    <button type="button" class="btn btn-add" (click)="openCreateForm()">+ Add New</button>
+  </div>
+
+  <app-expense-item-form
+    *ngIf="isFormOpen()"
+    [categories]="categories()"
+    [itemToEdit]="itemBeingEdited()"
+    (saved)="onItemSaved()"
+    (cancelled)="onFormCancelled()"
+  >
+  </app-expense-item-form>
+
+  <app-confirm-dialog
+    *ngIf="itemPendingDelete() as item"
+    title="Delete Expense Item"
+    [message]="
+      'Delete &quot;' +
+      item.itemName +
+      '&quot;? It will be marked inactive and removed from expense dropdowns. Existing expense records are not affected.'
+    "
+    confirmLabel="Delete"
+    [isProcessing]="isDeleting()"
+    [errorMessage]="deleteErrorMessage()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  >
+  </app-confirm-dialog>
+</div>
