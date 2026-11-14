@@ -72,7 +72,6 @@ export class ExpenseFormComponent implements OnInit {
     if (this.expenseToEdit) {
       this.initializeEditMode(this.expenseToEdit);
     }
-    console.log('ExpenseFormComponent initialized with expenseToEdit:', this.expenseToEdit);
 
     this.watchCategoryChanges();
     this.watchSubCategoryChanges();
@@ -119,7 +118,6 @@ export class ExpenseFormComponent implements OnInit {
       )
       .subscribe((items) => {
         this.expenseItems.set(items);
-        console.log('Setting expenseItemId to:', expense.expenseItemId);
         this.form.controls.expenseItemId.setValue(expense.expenseItemId ?? null, {
           emitEvent: false,
         });

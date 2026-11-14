@@ -1,6 +1,26 @@
-// _buttons.scss
 @use 'variables' as *;
 
+// ---- Responsive settings ---------------------------------------------------
+// Phone breakpoint and the minimum touch-target size. `!default` lets a
+// project override them before this file is loaded.
+$btn-breakpoint-sm: 576px !default;
+$btn-touch-size: 2.5rem !default; // ~40px, comfortable for a finger
+
+// Applies the wrapped styles on screens up to the phone breakpoint.
+@mixin btn-on-small-screen {
+  @media (max-width: $btn-breakpoint-sm) {
+    @content;
+  }
+}
+
+// Applies the wrapped styles on touch devices (no hover, coarse pointer).
+@mixin btn-on-touch-device {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+// ---- Base button -----------------------------------------------------------
 .btn {
   display: inline-flex;
   align-items: center;
@@ -24,6 +44,18 @@
   &:disabled {
     opacity: $btn-disabled-opacity;
     cursor: not-allowed;
+  }
+
+  // Phones: slightly tighter button so groups of buttons fit on one row.
+  @include btn-on-small-screen {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.85rem;
+    min-width: 4rem;
+  }
+
+  // Touch screens: guarantee a tappable height.
+  @include btn-on-touch-device {
+    min-height: $btn-touch-size;
   }
 }
 
@@ -65,7 +97,7 @@
   @include btn-solid($btn-danger-bg, $btn-danger-hover);
 }
 
-// Delete
+// Reset
 .btn-reset {
   @include btn-solid($btn-reset-bg, $btn-reset-hover);
 }
@@ -96,16 +128,27 @@
   }
 }
 
-// Delete
+// ---- Full-width button on phones --------------------------------------------
+// Optional: add `btn-block-mobile` next to `btn` to make a button fill the
+// row on phones (for example Save / Cancel in a modal).
+.btn-block-mobile {
+  @include btn-on-small-screen {
+    width: 100%;
+  }
+}
 
-//Table action buttons
-
+// ---- Table action buttons ----------------------------------------------------
 .row-actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  gap: 0.5rem; /* Keeps clean spacing between buttons when you uncomment Delete */
+  flex-wrap: wrap; // buttons drop to a second line instead of overflowing the cell
+  gap: 0.5rem; /* Keeps clean spacing between buttons */
   text-align: right; /* Fallback for non-flex table cell contexts */
+
+  @include btn-on-small-screen {
+    gap: 0.35rem;
+  }
 }
 
 .icon-btn {
@@ -114,6 +157,7 @@
   justify-content: center;
   width: 30px;
   height: 30px;
+  flex-shrink: 0; // never squash the circle inside a flex row
   border: none;
   border-radius: 50%;
   color: $btn-text-light;
@@ -139,6 +183,12 @@
     cursor: not-allowed;
     box-shadow: none;
   }
+
+  // Touch screens: bigger circle so edit / delete are easy to tap.
+  @include btn-on-touch-device {
+    width: 36px;
+    height: 36px;
+  }
 }
 
 // Edit / Update action
@@ -150,7 +200,7 @@
   }
 }
 
-// Delete / Remove action
+// Delete / Remove action (round icon version, used inside .icon-btn)
 .btn-delete {
   background: $btn-danger-bg;
 
@@ -170,4 +220,13 @@
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+// ---- Accessibility -------------------------------------------------------------
+// Respect the "reduce motion" setting: no transitions for those users.
+@media (prefers-reduced-motion: reduce) {
+  .btn,
+  .icon-btn {
+    transition: none;
+  }
 }

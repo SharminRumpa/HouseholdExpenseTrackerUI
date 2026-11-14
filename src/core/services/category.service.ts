@@ -9,7 +9,8 @@ import {
   IncomeSource,
   IncomeSourceCreate,
   IncomeSourceUpdate,
-  SubCategory,
+  ExpenseSubCategory,
+  ExpenseSubCategoryPayload,
 } from '../../models/category';
 
 @Injectable({ providedIn: 'root' })
@@ -46,13 +47,35 @@ export class CategoryService {
     return this.http.delete<void>(ApiRoutes.categories.expenseCategoryById(id));
   }
 
-  getExpenseSubCategories(categoryId: number): Observable<SubCategory[]> {
-    return this.http.get<SubCategory[]>(ApiRoutes.categories.expenseSubCategories(categoryId));
+  getExpenseSubCategories(categoryId: number): Observable<ExpenseSubCategory[]> {
+    return this.http.get<ExpenseSubCategory[]>(
+      ApiRoutes.categories.expenseSubCategories(categoryId),
+    );
   }
 
   // Expense Sub categories
-  getAllExpenseSubCategories(): Observable<SubCategory[]> {
-    return this.http.get<SubCategory[]>(ApiRoutes.categories.getExpenseSubCategories());
+  getAllExpenseSubCategories(): Observable<ExpenseSubCategory[]> {
+    return this.http.get<ExpenseSubCategory[]>(ApiRoutes.subCategories.base());
+  }
+
+  // POST: api/categories/expense-subcategories
+  createSubCategory(dto: ExpenseSubCategoryPayload): Observable<ExpenseSubCategory> {
+    return this.http.post<ExpenseSubCategory>(ApiRoutes.subCategories.base(), dto);
+  }
+
+  // PUT: api/categories/expense-subcategories/{id}
+  updateSubCategory(id: number, dto: ExpenseSubCategoryPayload): Observable<ExpenseSubCategory> {
+    return this.http.put<ExpenseSubCategory>(ApiRoutes.subCategories.byId(id), dto);
+  }
+
+  // Used by the Is Active switch in the table.
+  setActiveSubCategoryStatus(id: number, isActive: boolean): Observable<void> {
+    return this.http.patch<void>(ApiRoutes.subCategories.statusRequestById(id), { isActive });
+  }
+
+  // Removes the row. The server refuses (409) if the sub-category is in use.
+  deleteSubCategory(id: number): Observable<void> {
+    return this.http.delete<void>(ApiRoutes.subCategories.deleteRequestById(id));
   }
 
   // Income sources

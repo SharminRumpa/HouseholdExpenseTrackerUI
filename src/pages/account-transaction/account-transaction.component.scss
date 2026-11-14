@@ -1,0 +1,64 @@
+// @use '../../styles/filter-bar.scss' as *;
+// @use '../../styles/table.scss' as *;
+// @use '../../styles/btn.scss' as *;
+// @use '../../styles/modal' as *;
+
+.summary {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.data-table th.amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.debit {
+  color: #b02a37;
+}
+
+.credit {
+  color: #1e7e34;
+}
+
+.details {
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.badge-income {
+  background: #e6f4ea;
+  color: #1e7e34;
+}
+
+.badge-expense {
+  background: #fdecea;
+  color: #b02a37;
+}
+
+.badge-openingbalance {
+  background: #e8f0fe;
+  color: #1d4ed8;
+}
+
+.badge-adjustment {
+  background: #fff7e6;
+  color: #92400e;
+}

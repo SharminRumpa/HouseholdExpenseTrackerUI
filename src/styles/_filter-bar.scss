@@ -1,18 +1,52 @@
+// _filter-bar.scss
+
+// ---- Responsive settings ---------------------------------------------------
+// Names start with `filter-` so they never clash with variables from other
+// partials when a component does `@use '...' as *`. `!default` lets a project
+// override them before this file is loaded.
+$filter-bp-lg: 1200px !default; // below this: 3 filter columns
+$filter-bp-md: 900px !default; //  below this: 2 filter columns
+$filter-bp-sm: 640px !default; //  below this: toolbar stacks, footer goes full width
+$filter-bp-xs: 520px !default; //  below this: 1 filter column (phones)
+$filter-sidebar-width: 240px !default; // fixed sidebar that the page footer clears
+$filter-touch-height: 2.5rem !default; // comfortable finger target for inputs
+
+// Applies the wrapped styles on screens up to the given width.
+@mixin filter-max($width) {
+  @media (max-width: $width) {
+    @content;
+  }
+}
+
+// Applies the wrapped styles on touch devices (no hover, coarse pointer).
+@mixin filter-touch {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+// ---- Filter bar ------------------------------------------------------------
 .filter-bar {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr)); // minmax(0) lets long selects shrink
   gap: 1rem;
   align-items: end;
   background: #f8f9fb;
-  padding: 0 1rem 1rem 1rem;
+  //padding: 0 1rem 1rem 1rem;
   border-radius: 6px;
 
-  @media (max-width: 900px) {
-    grid-template-columns: repeat(2, 1fr);
+  @include filter-max($filter-bp-lg) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
-  @media (max-width: 520px) {
-    grid-template-columns: 1fr;
+  @include filter-max($filter-bp-md) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @include filter-max($filter-bp-xs) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.75rem;
+    padding: 0 0.75rem 0.75rem 0.75rem;
   }
 }
 
@@ -41,49 +75,104 @@
       outline: 2px solid #2563eb;
       outline-offset: 1px;
     }
+
+    // Phones: 16px stops iOS Safari from zooming the page when a field is focused.
+    @include filter-max($filter-bp-xs) {
+      font-size: 1rem;
+    }
+
+    // Touch screens: taller fields, and date inputs match selects in height.
+    @include filter-touch {
+      min-height: $filter-touch-height;
+    }
   }
 }
+
 .filter-actions {
   display: flex;
   align-items: center;
+  justify-content: flex-end;
   gap: 0.6rem;
 
-  @media (min-width: 521px) {
-    justify-content: flex-end;
+  // When the grid has 3 or fewer columns the buttons get their own full row
+  // instead of squeezing into one cell next to a field.
+  @include filter-max($filter-bp-lg) {
+    grid-column: 1 / -1;
+  }
+
+  // Phones: buttons share the row equally so they are easy to tap.
+  @include filter-max($filter-bp-xs) {
+    justify-content: stretch;
+
+    .btn {
+      flex: 1;
+    }
   }
 }
 
+// ---- Page footer (fixed action bar) -----------------------------------------
 .page-footer {
   position: fixed;
   bottom: 0;
-  left: 240px;
+  left: $filter-sidebar-width;
   right: 0;
 
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.6rem;
 
   padding: 8px 24px;
+  // Keeps buttons clear of the home-indicator bar on notched phones.
+  padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
   background: #f1f5f9;
   border-top: 1px solid #b91c1c;
   z-index: 1000;
+
+  // Assumes the sidebar is hidden or becomes an overlay on small screens,
+  // so the footer spans the full width instead of leaving a gap on the left.
+  @include filter-max($filter-bp-sm) {
+    left: 0;
+    padding-left: 12px;
+    padding-right: 12px;
+  }
+
+  // Phones: footer buttons share the row.
+  @include filter-max($filter-bp-xs) {
+    .btn {
+      flex: 1;
+    }
+  }
 }
 
-//Search box styles
-
+// ---- Search box styles ------------------------------------------------------
 .table-toolbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap; // toolbar items wrap instead of overflowing
   margin-bottom: 1rem;
   gap: 1rem;
+
+  // Small screens: search takes the whole row, the result count sits below it.
+  @include filter-max($filter-bp-sm) {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
 
   .search-box {
     position: relative;
     display: flex;
     align-items: center;
     flex: 1;
+    min-width: 0;
     max-width: 420px;
+
+    @include filter-max($filter-bp-sm) {
+      max-width: none; // fill the row on small screens
+    }
 
     .search-icon {
       position: absolute;
@@ -108,6 +197,15 @@
         border-color: #0d6efd;
         box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
       }
+
+      // Phones: 16px avoids the iOS focus-zoom.
+      @include filter-max($filter-bp-xs) {
+        font-size: 1rem;
+      }
+
+      @include filter-touch {
+        min-height: $filter-touch-height;
+      }
     }
 
     .clear-btn {
@@ -123,6 +221,11 @@
       &:hover {
         color: #212529;
       }
+
+      // Touch screens: a larger tap area for the clear (x) button.
+      @include filter-touch {
+        padding: 0.4rem;
+      }
     }
   }
 
@@ -130,5 +233,14 @@
     font-size: 0.85rem;
     color: #6c757d;
     font-weight: 500;
+    white-space: nowrap;
+  }
+}
+
+// ---- Accessibility ----------------------------------------------------------
+// Respect the "reduce motion" setting for the search box focus animation.
+@media (prefers-reduced-motion: reduce) {
+  .table-toolbar .search-box .search-input {
+    transition: none;
   }
 }

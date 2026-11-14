@@ -1,62 +1,182 @@
 <div class="page-section" id="page-main-content">
-
   <div class="modal-header">
     <h2 class="table-title">Expense Sub-Categories List</h2>
   </div>
+
+  <form class="filter-bar" [formGroup]="filterForm">
+    <div class="filter-field">
+      <label for="filterCategory">Category</label>
+      <select id="filterCategory" formControlName="expenseCategoryId">
+        <option [ngValue]="null">All categories</option>
+        <option *ngFor="let category of categories()" [ngValue]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="filterStatus">Status</label>
+      <select id="filterStatus" formControlName="status">
+        <option value="all">All</option>
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="filterSearch">Search</label>
+      <input
+        id="filterSearch"
+        type="search"
+        formControlName="search"
+        placeholder="Category, sub-category or description..."
+      />
+    </div>
+
+    <div class="filter-actions">
+      <button
+        type="button"
+        class="btn btn-reset"
+        *ngIf="hasActiveFilters()"
+        (click)="resetFilters()"
+      >
+        Reset
+      </button>
+    </div>
+  </form>
 
   <div *ngIf="isLoading()" class="state-message">Loading...</div>
 
   <div *ngIf="errorMessage()" class="state-message error">
     {{ errorMessage() }}
-    <button type="button" class="retry-btn" (click)="loadData()">Retry</button>
+    <button type="button" class="retry-btn" (click)="loadSubCategories()">Retry</button>
   </div>
 
-  <p class="empty-state" *ngIf="loading">Loading…</p>
+  <div *ngIf="actionError()" class="state-message error">{{ actionError() }}</div>
 
   <ng-container *ngIf="!isLoading() && !errorMessage()">
-
-    <div class="table-wrapper" *ngIf="expenseSubCategories().length; else noUsers">
+    <div class="table-wrapper" *ngIf="filteredSubCategories().length; else noSubCategories">
       <table class="data-table">
         <thead>
           <tr>
             <th class="num">#</th>
-            <th>Category name</th>
-            <th>Sub-category name</th>
+            <th>Category Name</th>
+            <th>Sub-Category Name</th>
             <th>Description</th>
-            <th>Is active</th>
-            <!-- <th>Action</th> -->
+            <th>Is Active</th>
+            <th class="action-title">Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let category of pagedSubCategories(); let i = index">
-            <td class="num">{{ i + 1 }}</td>
-            <td>{{ category.categoryName }}</td>
-            <td>{{ category.subCategoryName }}</td>
-            <td>{{ category.description }}</td>
-            <td>{{ category.isActive ? 'Yes' : 'No' }}</td>
-            <!--<td class="row-actions">
-              <button class="icon-btn btn-edit" title="Edit" (click)="startEdit(category)">
+          <tr
+            *ngFor="let sub of pagedSubCategories(); let i = index"
+            [class.inactive-row]="!sub.isActive"
+          >
+            <td class="num">{{ rowNumberOffset() + i + 1 }}</td>
+            <td>{{ sub.categoryName }}</td>
+            <td>{{ sub.subCategoryName }}</td>
+            <td class="description" [title]="sub.description || ''">
+              {{ sub.description || '—' }}
+            </td>
+            <td>
+              <button
+                type="button"
+                class="switch"
+                role="switch"
+                [class.on]="sub.isActive"
+                [attr.aria-checked]="sub.isActive"
+                [attr.aria-label]="'Toggle active for ' + sub.subCategoryName"
+                [title]="
+                  sub.isActive ? 'Active - click to deactivate' : 'Inactive - click to activate'
+                "
+                [disabled]="togglingId() !== null"
+                (click)="toggleActive(sub)"
+              >
+                <span class="knob"></span>
+              </button>
+            </td>
+
+            <td class="row-actions">
+              <button class="icon-btn btn-edit" title="Edit" (click)="startEdit(sub)">
                 ✎ <span class="visually-hidden">Edit</span>
               </button>
-              <button class="icon-btn btn-delete" title="Delete" (click)="remove(category)">
+              <button class="icon-btn btn-delete" title="Delete" (click)="remove(sub)">
                 🗑 <span class="visually-hidden">Delete</span>
               </button>
-            </td> -->
+            </td>
           </tr>
         </tbody>
       </table>
     </div>
 
-    <ng-template #noUsers>
-      <p class="empty-message">No users found.</p>
+    <ng-template #noSubCategories>
+      <p class="empty-message">
+        {{
+          subCategories().length
+            ? 'No sub-categories match the selected filters.'
+            : 'No sub-categories found.'
+        }}
+      </p>
     </ng-template>
 
-    <div class="pagination" *ngIf="expenseSubCategories().length">
-      <button type="button" class="btn btn-pagination" (click)="previousPage()" [disabled]="currentPage() === 1">Previous</button>
-      <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
-      <button type="button" class="btn btn-pagination" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
-    </div>
+    <div class="pagination" *ngIf="filteredSubCategories().length">
+      <!-- Spacer element to balance the flex layout so the controls stay dead center -->
+      <div style="width: 100px"></div>
 
+      <!-- Centered Navigation Controls -->
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="previousPage()"
+          [disabled]="currentPage() === 1"
+        >
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages()"
+        >
+          Next
+        </button>
+      </div>
+
+      <!-- Right-aligned Summary -->
+      <p class="summary" *ngIf="subCategories().length">
+        Total {{ filteredSubCategories().length }} sub-categories
+      </p>
+    </div>
   </ng-container>
 
+  <div class="page-footer">
+    <button type="button" class="btn btn-add" (click)="openCreateForm()">+ Add New</button>
+  </div>
+
+  <app-sub-category-form
+    *ngIf="isFormOpen()"
+    [categories]="categories()"
+    [subCategoryToEdit]="subCategoryBeingEdited()"
+    (saved)="onSaved()"
+    (cancelled)="onFormCancelled()"
+  >
+  </app-sub-category-form>
+
+  <app-confirm-dialog
+    *ngIf="subCategoryPendingDelete() as sub"
+    title="Delete Sub-Category"
+    [message]="
+      'Delete &quot;' +
+      sub.subCategoryName +
+      '&quot;? This cannot be undone. If it is already used by expense items or expenses, deactivate it instead.'
+    "
+    confirmLabel="Delete"
+    [isProcessing]="isDeleting()"
+    [errorMessage]="deleteErrorMessage()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  >
+  </app-confirm-dialog>
 </div>

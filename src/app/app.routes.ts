@@ -78,6 +78,20 @@ export const routes: Routes = [
         data: { title: 'Expense Items' },
       },
       {
+        path: 'account-transactions',
+        loadComponent: () =>
+          import('../pages/account-transaction/account-transaction.component').then(
+            (m) => m.AccountTransactionComponent,
+          ),
+        data: { title: 'Account Transactions' },
+      },
+      {
+        path: 'reports-expense',
+        loadComponent: () =>
+          import('../pages/report/expense-report.component').then((m) => m.ExpenseReportComponent),
+        data: { title: 'Account Transactions' },
+      },
+      {
         path: 'users',
         loadComponent: () => import('../pages/users/user.component').then((m) => m.UserComponent),
         data: { title: 'Users' },

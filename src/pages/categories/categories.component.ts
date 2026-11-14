@@ -2,7 +2,7 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CategoryService } from '../../core/services/category.service';
-import { Category, CategoryUpdate, IncomeSource, SubCategory } from '../../models/category';
+import { Category, CategoryUpdate, IncomeSource, ExpenseSubCategory } from '../../models/category';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../../core/services/auth.service';
 
@@ -13,10 +13,9 @@ const PAGE_SIZE = 10;
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './categories.component.html',
-  styleUrl: './categories.component.scss'
+  styleUrl: './categories.component.scss',
 })
 export class CategoriesComponent implements OnInit {
-
   private categoryService = inject(CategoryService);
   private authService = inject(AuthService);
 
@@ -30,8 +29,10 @@ export class CategoriesComponent implements OnInit {
   readonly pageSize = PAGE_SIZE;
 
   totalPages = computed(() =>
-    Math.max(1, Math.ceil(this.expenseCategories().length / this.pageSize))
+    Math.max(1, Math.ceil(this.expenseCategories().length / this.pageSize)),
   );
+  // Keeps the "#" column counting continuously across pages (11, 12, 13...).
+  rowNumberOffset = computed(() => (this.currentPage() - 1) * this.pageSize);
 
   pagedCategories = computed(() => {
     const start = (this.currentPage() - 1) * this.pageSize;
@@ -47,7 +48,7 @@ export class CategoriesComponent implements OnInit {
     this.errorMessage.set(null);
 
     forkJoin({
-      categories: this.categoryService.getExpenseCategories()
+      categories: this.categoryService.getExpenseCategories(),
     }).subscribe({
       next: ({ categories }) => {
         this.expenseCategories.set(categories);
@@ -59,7 +60,7 @@ export class CategoriesComponent implements OnInit {
       error: () => {
         this.errorMessage.set('Failed to load income categories and sources. Please try again.');
         this.isLoading.set(false);
-      }
+      },
     });
   }
 
@@ -77,5 +78,4 @@ export class CategoriesComponent implements OnInit {
     console.log('Previous page clicked. Current page:', this.currentPage());
     this.goToPage(this.currentPage() - 1);
   }
-
 }

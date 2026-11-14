@@ -6,9 +6,8 @@ import { ApiRoutes } from '../api/api-routes';
 import { environment } from '../../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class LookupService {
   private http = inject(HttpClient);
 
@@ -27,25 +26,34 @@ export class LookupService {
   }
 
   getExpenseItems(expenseSubCategoryId: number): Observable<DropdownItem[]> {
-    return this.http.get<DropdownItem[]>(
-      `${this.baseUrl}/expense-items`,
-      { params: { expenseSubCategoryId } }
-    );
+    return this.http.get<DropdownItem[]>(`${this.baseUrl}/expense-items`, {
+      params: { expenseSubCategoryId },
+    });
   }
 
-  getExpenseSubCategories(expenseCategoryId?: number | null): Observable<ExpenseSubCategoryDropdown[]> {
+  getExpenseSubCategories(
+    expenseCategoryId?: number | null,
+  ): Observable<ExpenseSubCategoryDropdown[]> {
     let params = new HttpParams();
 
     if (expenseCategoryId) {
       params = params.set('expenseCategoryId', expenseCategoryId);
     }
 
-    return this.http.get<ExpenseSubCategoryDropdown[]>(`${this.baseUrl}/expense-subcategories`, { params });
+    return this.http.get<ExpenseSubCategoryDropdown[]>(`${this.baseUrl}/expense-subcategories`, {
+      params,
+    });
   }
 
   getRoles(): Observable<DropdownItem[]> {
     return this.http.get<DropdownItem[]>(`${this.baseUrl}/roles`);
   }
 
-}
+  getExpensePersons(): Observable<string[]> {
+    return this.http.get<string[]>(ApiRoutes.lookup.getExpensePersons());
+  }
 
+  getExpenseForPersons(): Observable<string[]> {
+    return this.http.get<string[]>(ApiRoutes.lookup.getExpenseForPersons());
+  }
+}

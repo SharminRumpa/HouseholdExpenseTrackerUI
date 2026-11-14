@@ -19,6 +19,12 @@ export interface ResponseDto {
   data?: any;
 }
 
+export interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
 export const MONTH_NAMES: string[] = [
   'January',
   'February',

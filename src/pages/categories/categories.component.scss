@@ -1,3 +1,62 @@
-@use '../../styles/filter-bar.scss' as *;
-@use '../../styles/table.scss' as *;
-@use '../../styles/btn.scss' as *;
+// @use '../../styles/filter-bar.scss' as *;
+// @use '../../styles/table.scss' as *;
+// @use '../../styles/btn.scss' as *;
+
+.summary {
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.description {
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.inactive-row {
+  opacity: 0.65;
+}
+
+// Is Active on/off switch.
+.switch {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: #d1d5db;
+  cursor: pointer;
+  transition: background 0.15s;
+
+  .knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.15s;
+  }
+
+  &.on {
+    background: #1e7e34;
+
+    .knob {
+      transform: translateX(18px);
+    }
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: wait;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+}

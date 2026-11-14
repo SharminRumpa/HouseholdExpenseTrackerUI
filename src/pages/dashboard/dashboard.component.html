@@ -28,6 +28,18 @@
         <span class="kpi-label">Balance</span>
         <span class="kpi-value num figure--gold">৳{{ data.balance | number: '1.0-0' }}</span>
       </div>
+      <div class="panel kpi">
+        <span class="kpi-label">Daily Income</span>
+        <span class="kpi-value num figure--credit"
+          >৳{{ data.totalDailyIncome | number: '1.0-0' }}</span
+        >
+      </div>
+      <div class="panel kpi">
+        <span class="kpi-label">Daily Expense</span>
+        <span class="kpi-value num figure--debit"
+          >৳{{ data.totalDailyExpense | number: '1.0-0' }}</span
+        >
+      </div>
     </div>
 
     <div class="breakdown-row">

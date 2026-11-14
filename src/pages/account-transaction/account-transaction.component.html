@@ -1,0 +1,189 @@
+<div class="account-transaction-page" id="page-main-content">
+  <div class="modal-header">
+    <h2 class="table-title">Account Transaction List</h2>
+  </div>
+
+  <form
+    class="filter-bar"
+    [formGroup]="filterForm"
+    (input)="onFilterChanged()"
+    (change)="onFilterChanged()"
+    (ngSubmit)="applyFilters()"
+  >
+    <div class="filter-field">
+      <label for="fromDate">From Date</label>
+      <input id="fromDate" type="date" formControlName="fromDate" />
+    </div>
+
+    <div class="filter-field">
+      <label for="toDate">To Date</label>
+      <input id="toDate" type="date" formControlName="toDate" />
+    </div>
+
+    <!-- <div class="filter-field">
+      <label for="filterAccount">Account</label>
+      <select id="filterAccount" formControlName="personalAccountId">
+        <option [ngValue]="null">All accounts</option>
+        <option *ngFor="let account of accounts()" [ngValue]="account.personalAccountId">
+          {{ account.accountName }}
+        </option>
+      </select>
+    </div> -->
+
+    <div class="filter-field">
+      <label for="filterType">Transaction Type</label>
+      <select id="filterType" formControlName="transactionType">
+        <option [ngValue]="null">All types</option>
+        <option *ngFor="let type of types" [ngValue]="type">{{ typeLabels[type] }}</option>
+      </select>
+    </div>
+
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-search">Search</button>
+      <button
+        type="button"
+        class="btn btn-reset"
+        *ngIf="hasActiveFilters()"
+        (click)="resetFilters()"
+      >
+        Reset
+      </button>
+    </div>
+
+    <div class="filter-field">
+      <label for="search">Search</label>
+      <input
+        id="search"
+        type="search"
+        formControlName="search"
+        placeholder="Account, details, amount..."
+      />
+    </div>
+  </form>
+
+  <div *ngIf="isLoading()" class="state-message">Loading...</div>
+
+  <div *ngIf="errorMessage()" class="state-message error">
+    {{ errorMessage() }}
+    <button type="button" class="retry-btn" (click)="loadTransactions()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && !errorMessage()">
+    <p class="summary" *ngIf="filteredTransactions().length">
+      {{ filteredTransactions().length }} of {{ transactions().length }} transactions · Total Debit:
+      <strong>{{ totalDebit() | number: '1.2-2' }}</strong> · Total Credit:
+      <strong>{{ totalCredit() | number: '1.2-2' }}</strong>
+    </p>
+
+    <div class="table-wrapper" *ngIf="filteredTransactions().length; else noTransactions">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Account Name</th>
+            <!-- <th>Account Type</th> -->
+            <th>Transaction Type</th>
+            <th>Details</th>
+            <th>Created At</th>
+            <th class="amount">Debit</th>
+            <th class="amount">Credit</th>
+            <th class="amount">Balance</th>
+            <th class="amount">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of pagedTransactions(); let i = index">
+            <td class="num">{{ rowNumberOffset() + i + 1 }}</td>
+            <td>{{ t.accountName }}</td>
+            <!-- <td>{{ t.accountType }}</td> -->
+            <td>
+              <span class="badge badge-{{ t.transactionType | lowercase }}">
+                {{ typeLabel(t.transactionType) }}
+              </span>
+            </td>
+            <td class="details" [title]="t.details">{{ t.details }}</td>
+            <td>{{ t.createdAt | date: 'dd MMM yyyy, hh:mm a' }}</td>
+            <td class="amount debit">{{ t.debit ? (t.debit | number: '1.2-2') : '—' }}</td>
+            <td class="amount credit">{{ t.credit ? (t.credit | number: '1.2-2') : '—' }}</td>
+            <td class="amount">{{ t.balanceAfterTransaction | number: '1.2-2' }}</td>
+
+            <td class="row-actions">
+              <button class="icon-btn btn-delete" title="Delete" (click)="remove(t)">
+                🗑 <span class="visually-hidden">Delete</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noTransactions>
+      <p class="empty-message">
+        {{
+          transactions().length
+            ? 'No transactions match the selected filters.'
+            : 'No transactions found.'
+        }}
+      </p>
+    </ng-template>
+
+    <div class="pagination" *ngIf="filteredTransactions().length">
+      <!-- Spacer element to balance the flex layout so the controls stay dead center -->
+      <div style="width: 100px"></div>
+
+      <!-- Centered Navigation Controls -->
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="previousPage()"
+          [disabled]="currentPage() === 1"
+        >
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages()"
+        >
+          Next
+        </button>
+      </div>
+
+      <!-- Right-aligned Summary -->
+      <p class="summary" *ngIf="transactions().length">
+        Total ( {{ transactions().length }} records)
+      </p>
+    </div>
+  </ng-container>
+
+  <div class="page-footer">
+    <button type="button" class="btn btn-add" (click)="openCreateForm()">+ Add New</button>
+  </div>
+
+  <app-account-transaction-form
+    *ngIf="showCreateForm()"
+    [accounts]="accounts()"
+    (saved)="onSaved()"
+    (cancelled)="onFormCancelled()"
+  >
+  </app-account-transaction-form>
+
+  <app-confirm-dialog
+    *ngIf="transactionPendingDelete() as transaction"
+    title="Delete Transaction"
+    [message]="
+      'Delete this transaction (' +
+      transaction.details +
+      ')? The account balance will be recalculated.'
+    "
+    confirmLabel="Delete"
+    [isProcessing]="isDeleting()"
+    [errorMessage]="deleteErrorMessage()"
+    (confirmed)="confirmDelete()"
+    (cancelled)="cancelDelete()"
+  >
+  </app-confirm-dialog>
+</div>

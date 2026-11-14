@@ -8,6 +8,8 @@ export interface DashboardSummary {
   month: number;
   totalIncome: number;
   totalExpense: number;
+  totalDailyIncome: number;
+  totalDailyExpense: number;
   balance: number;
   expenseByCategory: CategoryTotal[];
   incomeByCategory: CategoryTotal[];

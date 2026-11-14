@@ -1,5 +1,4 @@
 <div class="page-section" id="page-main-content">
-
   <div class="modal-header">
     <h2 class="table-title">Expense Categories List</h2>
   </div>
@@ -14,7 +13,6 @@
   <p class="empty-state" *ngIf="loading">Loading…</p>
 
   <ng-container *ngIf="!isLoading() && !errorMessage()">
-
     <div class="table-wrapper" *ngIf="expenseCategories().length; else noUsers">
       <table class="data-table">
         <thead>
@@ -28,7 +26,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let category of pagedCategories(); let i = index">
-            <td class="num">{{ i + 1 }}</td>
+            <td class="num">{{ rowNumberOffset() + i + 1 }}</td>
             <td>{{ category.categoryName }}</td>
             <td>{{ category.description }}</td>
             <td>{{ category.isActive ? 'Yes' : 'No' }}</td>
@@ -50,11 +48,32 @@
     </ng-template>
 
     <div class="pagination" *ngIf="expenseCategories().length">
-      <button type="button" class="btn btn-pagination" (click)="previousPage()" [disabled]="currentPage() === 1">Previous</button>
-      <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
-      <button type="button" class="btn btn-pagination" (click)="nextPage()" [disabled]="currentPage() === totalPages()">Next</button>
+      <!-- Spacer element to balance the flex layout so the controls stay dead center -->
+      <div style="width: 100px"></div>
+      <!-- Centered Navigation Controls -->
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="previousPage()"
+          [disabled]="currentPage() === 1"
+        >
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages()"
+        >
+          Next
+        </button>
+      </div>
+      <!-- Right-aligned Summary -->
+      <p class="summary" *ngIf="expenseCategories().length">
+        Total {{ expenseCategories().length }} Expense Category
+      </p>
     </div>
-
   </ng-container>
-
 </div>

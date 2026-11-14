@@ -1,0 +1,157 @@
+<div class="report-page" id="page-main-content">
+  <div class="modal-header">
+    <h2 class="table-title">Expense Report</h2>
+  </div>
+
+  <form class="filter-bar" [formGroup]="filterForm" (ngSubmit)="search()">
+    <div class="filter-field">
+      <label for="fromDate">From Date</label>
+      <input id="fromDate" type="date" formControlName="fromDate" />
+    </div>
+
+    <div class="filter-field">
+      <label for="toDate">To Date</label>
+      <input id="toDate" type="date" formControlName="toDate" />
+    </div>
+
+    <div class="filter-field">
+      <label for="categoryId">Category</label>
+      <select id="categoryId" formControlName="categoryId">
+        <option [ngValue]="null">All categories</option>
+        <option *ngFor="let category of categories()" [ngValue]="category.id">
+          {{ category.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="subCategoryId">Sub Category</label>
+      <select id="subCategoryId" formControlName="subCategoryId">
+        <option [ngValue]="null">All sub categories</option>
+        <option *ngFor="let sub of subCategories()" [ngValue]="sub.id">{{ sub.name }}</option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="expenseBy">Expense By</label>
+      <select id="expenseBy" formControlName="expenseBy">
+        <option [ngValue]="null">All persons</option>
+        <option *ngFor="let person of persons()" [value]="person">{{ person }}</option>
+      </select>
+    </div>
+
+    <div class="filter-field">
+      <label for="expenseFor">Expense For</label>
+      <select id="expenseFor" formControlName="expenseFor">
+        <option [ngValue]="null">All persons</option>
+        <option *ngFor="let person of forPersons()" [value]="person">{{ person }}</option>
+      </select>
+    </div>
+
+    <div class="filter-actions">
+      <button type="submit" class="btn btn-search" [disabled]="isDateRangeInvalid() || isLoading()">
+        Search
+      </button>
+      <button type="button" class="btn btn-reset" (click)="resetFilters()">Reset</button>
+      <button
+        type="button"
+        class="btn btn-excel"
+        (click)="downloadExcel()"
+        [disabled]="isDownloading() || !report()?.rows.length"
+      >
+        {{ isDownloading() ? 'Preparing...' : 'Download Excel' }}
+      </button>
+    </div>
+  </form>
+
+  <p class="field-error" *ngIf="isDateRangeInvalid()">From date cannot be after To date.</p>
+
+  <div *ngIf="isLoading()" class="state-message">Loading...</div>
+
+  <div *ngIf="errorMessage()" class="state-message error">
+    {{ errorMessage() }}
+    <button type="button" class="retry-btn" (click)="search()">Retry</button>
+  </div>
+
+  <ng-container *ngIf="!isLoading() && !errorMessage() && report() as r">
+    <!-- <div class="summary-cards">
+      <div class="summary-card total">
+        <span class="summary-label">Total Expenses</span>
+        <span class="summary-value">{{ r.totalAmount | number: '1.2-2' }}</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-label">Records</span>
+        <span class="summary-value">{{ r.recordCount }}</span>
+      </div> 
+    </div>-->
+
+    <div class="table-wrapper" *ngIf="r.rows.length; else noRows">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th class="num">#</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Sub Category</th>
+            <th>Item</th>
+            <th>Description</th>
+            <th>Expense By</th>
+            <th>Expense For</th>
+            <th class="amount">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of pagedRows(); let i = index">
+            <td class="num">{{ rowNumberOffset() + i + 1 }}</td>
+            <td>{{ row.expenseDate | date: 'dd MMM yyyy' }}</td>
+            <td>{{ row.categoryName }}</td>
+            <td>{{ row.subCategoryName || '—' }}</td>
+            <td>{{ row.itemName || '—' }}</td>
+            <td class="description" [title]="row.description || ''">
+              {{ row.description || '—' }}
+            </td>
+            <td>{{ row.expenseBy || '—' }}</td>
+            <td>{{ row.expenseFor || '—' }}</td>
+            <td class="amount">{{ row.amount | number: '1.2-2' }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="8" class="total-label">Total ({{ r.recordCount }} records)</td>
+            <td class="amount total-value">{{ r.totalAmount | number: '1.2-2' }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+
+    <ng-template #noRows>
+      <p class="empty-message">No expenses found for the selected filters.</p>
+    </ng-template>
+
+    <div class="pagination" *ngIf="r.rows.length">
+      <!-- Spacer element to balance the flex layout so the controls stay dead center -->
+      <div style="width: 100px"></div>
+
+      <!-- Centered Navigation Controls -->
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="previousPage()"
+          [disabled]="currentPage() === 1"
+        >
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages()"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </ng-container>
+</div>

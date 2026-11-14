@@ -1,10 +1,9 @@
-
 @use '../../styles/modal' as *;
 @use '../../styles/filter-bar' as *;
 
 .kpi-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 0;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -19,7 +18,9 @@
   flex-direction: column;
   gap: 6px;
 }
-.kpi:not(:last-child) { border-right: 1px solid var(--line); }
+.kpi:not(:last-child) {
+  border-right: 1px solid var(--line);
+}
 
 .kpi-label {
   font-size: 12px;
@@ -39,9 +40,16 @@
 }
 
 @media (max-width: 720px) {
-  .kpi-row { grid-template-columns: 1fr; }
-  .kpi:not(:last-child) { border-right: none; border-bottom: 1px solid var(--line); }
-  .breakdown-row { grid-template-columns: 1fr; }
+  .kpi-row {
+    grid-template-columns: 1fr;
+  }
+  .kpi:not(:last-child) {
+    border-right: none;
+    border-bottom: 1px solid var(--line);
+  }
+  .breakdown-row {
+    grid-template-columns: 1fr;
+  }
 }
 
 .breakdown-list {
@@ -56,4 +64,6 @@
   border-bottom: 1px solid var(--line);
   font-size: 13px;
 }
-.breakdown-list li:last-child { border-bottom: none; }
+.breakdown-list li:last-child {
+  border-bottom: none;
+}

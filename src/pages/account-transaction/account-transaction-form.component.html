@@ -1,0 +1,124 @@
+<div class="modal-backdrop" (click)="cancel()">
+  <div class="modal-panel" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h2>Add New Transaction</h2>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field-row">
+        <!-- <div class="field">
+          <label for="personalAccountId">Account <span class="required">*</span></label>
+          <select id="personalAccountId" formControlName="personalAccountId">
+            <option [ngValue]="null" disabled>Select an account</option>
+            <option *ngFor="let account of accounts" [ngValue]="account.personalAccountId">
+              {{ account.accountName }} ({{ account.accountType }})
+            </option>
+          </select>
+          <span
+            class="field-error"
+            *ngIf="
+              form.controls.personalAccountId.touched && form.controls.personalAccountId.invalid
+            "
+          >
+            Account is required.
+          </span>
+        </div> -->
+
+        <div class="field">
+          <label for="accountName">Account <span class="required">*</span></label>
+          <input id="accountName" type="text" [value]="currentUser()?.name ?? ''" disabled />
+          <input type="hidden" formControlName="personalAccountId" />
+        </div>
+
+        <div class="field">
+          <label for="transactionDate">Transaction Date <span class="required">*</span></label>
+          <input id="transactionDate" type="date" formControlName="transactionDate" />
+          <span
+            class="field-error"
+            *ngIf="form.controls.transactionDate.touched && form.controls.transactionDate.invalid"
+          >
+            Transaction date is required.
+          </span>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="transactionType">Transaction Type <span class="required">*</span></label>
+          <select id="transactionType" formControlName="transactionType">
+            <option [ngValue]="null" disabled>Select a type</option>
+            <option *ngFor="let type of types" [ngValue]="type">
+              {{ typeLabels[type] }}
+            </option>
+          </select>
+          <span
+            class="field-error"
+            *ngIf="form.controls.transactionType.touched && form.controls.transactionType.invalid"
+          >
+            Transaction type is required.
+          </span>
+        </div>
+
+        <div class="field">
+          <label for="amount">Amount <span class="required">*</span></label>
+          <input id="amount" type="number" step="0.01" min="0" formControlName="amount" />
+          <span
+            class="field-error"
+            *ngIf="form.controls.amount.touched && form.controls.amount.invalid"
+          >
+            Enter an amount greater than 0.
+          </span>
+        </div>
+      </div>
+
+      <div class="field" *ngIf="isAdjustment">
+        <label for="direction">Adjustment Direction <span class="required">*</span></label>
+        <select id="direction" formControlName="direction">
+          <option value="credit">Add money to the account (credit)</option>
+          <option value="debit">Take money out of the account (debit)</option>
+        </select>
+      </div>
+
+      <p class="hint" *ngIf="entrySide">
+        {{
+          entrySide === 'credit'
+            ? 'Recorded as a credit: adds money to the account.'
+            : 'Recorded as a debit: takes money out of the account.'
+        }}
+      </p>
+
+      <p class="warning" *ngIf="exceedsBalance">
+        This is more than the account's current balance of
+        {{ selectedAccount?.currentBalance | number: '1.2-2' }}, so it will probably be rejected.
+      </p>
+
+      <div class="field">
+        <label for="details">Details <span class="required">*</span></label>
+        <textarea
+          id="details"
+          formControlName="details"
+          rows="2"
+          maxlength="250"
+          placeholder="e.g. Freelance income"
+        ></textarea>
+        <span
+          class="field-error"
+          *ngIf="form.controls.details.touched && form.controls.details.invalid"
+        >
+          Details are required.
+        </span>
+      </div>
+
+      <p class="form-error" *ngIf="errorMessage()">{{ errorMessage() }}</p>
+
+      <div class="form-actions">
+        <button type="button" class="btn btn-cancel" (click)="cancel()" [disabled]="isSaving()">
+          Cancel
+        </button>
+        <button type="submit" class="btn btn-save" [disabled]="isSaving()">
+          {{ isSaving() ? 'Saving...' : 'Save' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

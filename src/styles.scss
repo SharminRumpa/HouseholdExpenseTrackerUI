@@ -8,22 +8,30 @@
   money actually line up, the way they would on a ledger page.
 */
 
-@forward 'shared';
+/* 
+  Design concept: "The ledger, not the dashboard."
+  Household bookkeeping visual language: bound account book style,
+  tabular monospaced figures, hairlines instead of shadows, and clean typography.
+*/
 
+@use 'styles/variables';
+@use 'styles/btn';
+@use 'styles/filter-bar';
+@use 'styles/table';
+@use 'styles/modal';
 
 :root {
-  /* Color: paper, ink, and two inks-of-account (credit / debit) plus a gold for the bottom line */
   --paper: #f6f5f1;
   --ink: #1b2420;
   --ink-soft: #4b544f;
   --line: #dcd8ce;
   --surface: #ffffff;
 
-  --credit: #2e6b52;   /* income / positive */
+  --credit: #2e6b52; /* income / positive */
   --credit-tint: #e7f0ea;
-  --debit: #a23b2e;    /* expense / negative */
+  --debit: #a23b2e; /* expense / negative */
   --debit-tint: #f5e9e6;
-  --gold: #b8892f;     /* balance / highlight */
+  --gold: #b8892f; /* balance / highlight */
   --gold-tint: #f6eedd;
 
   --radius: 3px;
@@ -33,9 +41,14 @@
   --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
 }
 
-* { box-sizing: border-box; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -43,14 +56,17 @@ html, body {
 
 body {
   font-family: var(--font-ui);
-  background: #FAFAFA;
+  background: #fafafa;
   color: var(--ink);
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
   font-family: var(--font-ui);
   font-weight: 700;
   color: var(--ink);
@@ -58,140 +74,98 @@ h1, h2, h3, h4 {
   letter-spacing: -0.01em;
 }
 
-h1 { font-size: 22px; }
-h2 { font-size: 17px; }
-h3 { font-size: 14px; font-weight: 600; }
+h1 {
+  font-size: clamp(1.25rem, 4vw, 1.375rem); /* 22px max */
+}
+h2 {
+  font-size: clamp(1rem, 3vw, 1.0625rem); /* 17px max */
+}
+h3 {
+  font-size: 14px;
+  font-weight: 600;
+}
 
-p { margin: 0 0 8px; color: var(--ink-soft); }
+p {
+  margin: 0 0 8px;
+  color: var(--ink-soft);
+}
 
-a { color: var(--credit); text-decoration: none; }
-a:hover { text-decoration: underline; }
+a {
+  color: var(--credit);
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}
 
-/* All monetary and numeric figures share one tabular typeface so digits align in columns. */
-.num, .figure, td.num {
+/* Tabular typeface for alignment in monetary columns */
+.num,
+.figure,
+td.num {
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
 }
 
-.figure--credit { color: var(--credit); }
-.figure--debit { color: var(--debit); }
-.figure--gold { color: var(--gold); }
-
+.figure--credit {
+  color: var(--credit);
+}
+.figure--debit {
+  color: var(--debit);
+}
+.figure--gold {
+  color: var(--gold);
+}
 
 .page-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  //margin-bottom: 10px;
   flex-wrap: wrap;
-  //gap: 10px;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-#page-main-content{
-   display: flex;
+#page-main-content {
+  display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.2rem;
+  margin-bottom: 5rem;
+  width: 100%;
+  //max-width: 1200px;
+  margin-inline: auto;
+  //padding: 0 1rem;
+
+  // @media (min-width: 768px) {
+  //   padding: 0 1.5rem;
+  // }
 }
 
-button, input, select, textarea { font-family: inherit; font-size: inherit; }
-
-button {
-  cursor: pointer;
-  border: 1px solid var(--ink);
-  background: var(--ink);
-  color: var(--paper);
-  border-radius: var(--radius);
-  padding: 8px 14px;
-  font-weight: 600;
-  transition: opacity 0.15s ease;
-}
-button:hover { opacity: 0.85; }
-button:disabled { opacity: 0.4; cursor: not-allowed; }
-
-button.secondary {
-  background: transparent;
-  color: var(--ink);
-  border: 1px solid var(--line);
-}
-button.secondary:hover { background: var(--surface); opacity: 1; border-color: var(--ink); }
-
-button.danger {
-  background: var(--debit);
-  border-color: var(--debit);
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+  font-size: inherit;
 }
 
 input,
-  select {
-    width: 100%;
-    padding: 0.45rem 0.6rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    font-size: 0.88rem;
-    font-family: inherit;
-
-    &:focus {
-      outline: 2px solid #2563eb;
-      outline-offset: 1px;
-    }
-  }
-
-/* Ledger table: hairlines between rows, no zebra striping, right-aligned money columns */
-table.ledger {
+select {
   width: 100%;
-  border-collapse: collapse;
-}
-table.ledger th {
-  text-align: left;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ink-soft);
-  padding: 8px 10px;
-  border-bottom: 2px solid var(--ink);
-}
-table.ledger td {
-  padding: 10px;
-  border-bottom: 1px solid var(--line);
-  vertical-align: middle;
-}
-table.ledger th.num, table.ledger td.num { text-align: right; }
-table.ledger tbody tr:hover { background: var(--surface); }
+  padding: 0.45rem 0.6rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 0.88rem;
+  background-color: var(--surface);
 
-.panel {
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  padding: 16px;
-}
-
-
-
-.actions-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.error-text {
-  color: var(--debit);
-  font-size: 13px;
-  margin-top: 4px;
-}
-
-.empty-state {
-  padding: 32px 16px;
-  text-align: center;
-  color: var(--ink-soft);
-  border: 1px dashed var(--line);
-  border-radius: var(--radius);
-}
-
-.visually-hidden {
-  position: absolute;
-  width: 1px; height: 1px;
-  overflow: hidden;
-  clip: rect(0 0 0 0);
+  &:focus {
+    outline: 2px solid #2563eb;
+    outline-offset: 1px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * { transition: none !important; animation: none !important; }
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
 }

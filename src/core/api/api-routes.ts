@@ -1,4 +1,3 @@
-// src/app/core/api/api-routes.ts
 import { environment } from '../../environments/environment';
 
 const baseUrl = environment.apiBaseUrl;
@@ -37,6 +36,17 @@ export const ApiRoutes = {
     getExpenseSubCategories: () => `${baseUrl}/categories/expense-subcategories`,
   },
 
+  //#region Expense Sub-Categories
+
+  subCategories: {
+    base: () => `${baseUrl}/categories/expense-subcategories`,
+    byId: (id: number) => `${baseUrl}/categories/expense-subcategories/${id}`,
+    statusRequestById: (id: number) => `${baseUrl}/categories/expense-subcategories/${id}/status`,
+    deleteRequestById: (id: number) => `${baseUrl}/categories/expense-subcategories/${id}`,
+  },
+
+  //#endregion Sub-Categories
+
   user: {
     base: () => `${baseUrl}/user`,
     byId: (id: number) => `${baseUrl}/user/${id}`,
@@ -56,4 +66,29 @@ export const ApiRoutes = {
     login: () => `${baseUrl}/auth/login`,
     register: () => `${baseUrl}/auth/register`,
   },
+
+  //#region Look up
+
+  lookup: {
+    getIncomeCategories: () => `${baseUrl}/lookup/income-categories`,
+    getIncomeSources: () => `${baseUrl}/lookup/income-sources`,
+    getExpenseCategories: () => `${baseUrl}/lookup/expense-categories`,
+    getExpenseSubCategories: (expenseCategoryId: number) =>
+      `${baseUrl}/lookup/expense-subcategories/${expenseCategoryId}`,
+    getExpenseItems: (expenseSubCategoryId: number) =>
+      `${baseUrl}/lookup/expense-items/${expenseSubCategoryId}`,
+    getRoles: () => `${baseUrl}/lookup/roles`,
+    getExpensePersons: () => `${baseUrl}/lookup/expense-persons`,
+    getExpenseForPersons: () => `${baseUrl}/lookup/expense-for-persons`,
+  },
+
+  //#endregion
+
+  //#region Report
+
+  report: {
+    base: () => `${baseUrl}/reports`,
+  },
+
+  //#endregion
 };

@@ -1,5 +1,29 @@
+// _modal.scss
 @use 'variables' as *;
 
+// ---- Responsive settings ---------------------------------------------------
+// Names start with `modal-` so they never clash with variables or mixins from
+// other partials when a component does `@use '...' as *`. `!default` lets a
+// project override them before this file is loaded.
+$modal-bp-sm: 640px !default; // tablets and below: tighter spacing
+$modal-bp-xs: 520px !default; // phones: stacked fields, full-width buttons
+$modal-touch-height: 2.5rem !default; // comfortable finger target
+
+// Applies the wrapped styles on screens up to the given width.
+@mixin modal-max($width) {
+  @media (max-width: $width) {
+    @content;
+  }
+}
+
+// Applies the wrapped styles on touch devices (no hover, coarse pointer).
+@mixin modal-touch {
+  @media (hover: none) and (pointer: coarse) {
+    @content;
+  }
+}
+
+// ---- Modal shell -----------------------------------------------------------
 .modal-backdrop {
   position: fixed;
   //position: relative;
@@ -10,15 +34,33 @@
   justify-content: center;
   padding: 3rem 1rem;
   z-index: 1000;
+  // A modal taller than the screen (long form, small phone, landscape)
+  // scrolls inside the backdrop instead of being cut off.
+  overflow-y: auto;
+  overscroll-behavior: contain;
+
+  @include modal-max($modal-bp-sm) {
+    padding: 1.5rem 0.75rem;
+  }
+
+  @include modal-max($modal-bp-xs) {
+    padding: 0.75rem 0.5rem;
+  }
 }
 
 .modal-panel {
+  // Anchor for the absolutely positioned .modal-close button.
+  position: relative;
   background: #fff;
   //border-radius: 8px;
   padding: 1.5rem;
   width: 100%;
   max-width: 600px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+  @include modal-max($modal-bp-xs) {
+    padding: 1rem;
+  }
 
   .field {
     margin: 0 0 0.8rem;
@@ -34,6 +76,12 @@
   h2 {
     text-align: center;
     font-size: 1.3rem;
+    // Keeps a long title from running under the close (x) button.
+    padding: 0 2.5rem;
+
+    @include modal-max($modal-bp-xs) {
+      font-size: 1.15rem;
+    }
   }
 }
 
@@ -47,28 +95,8 @@
 
 .required {
   color: #dc2626;
-  /* Red */
   margin-left: 2px;
 }
-
-// .message {
-//   margin: 0 0 1rem;
-//   font-size: 1rem;
-//   color: #760d17;
-// }
-
-// .dialog-body {
-//   .message {
-//     font-size: 0.9rem;
-//     color: #201f1f;
-//   }
-
-//   p {
-//     margin: 0 0 1rem;
-//     font-size: 1rem;
-//     color: #760d17;
-//   }
-// }
 
 .dialog-body {
   // Styles for base paragraph container
@@ -76,6 +104,7 @@
     margin: 0 0 1rem;
     font-size: 0.9rem;
     color: #b61424; // Neutral dark gray for primary question text
+    overflow-wrap: anywhere; // long names / values wrap instead of overflowing
 
     // Target the injected .message class inside [innerHTML]
     .message {
@@ -107,9 +136,18 @@
 .form-actions {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap; // three or more buttons wrap instead of overflowing
   gap: 0.6rem;
+
+  // Phones: buttons share the row so they are easy to tap.
+  @include modal-max($modal-bp-xs) {
+    .btn {
+      flex: 1;
+    }
+  }
 }
 
+// ---- Form controls ---------------------------------------------------------
 input,
 select,
 textarea {
@@ -119,6 +157,21 @@ textarea {
   background: var(--surface);
   color: $lbl-text;
   width: 100%;
+  box-sizing: border-box; // width: 100% plus padding never overflows the panel
+
+  // Phones: 16px stops iOS Safari from zooming the page when a field is focused.
+  @include modal-max($modal-bp-xs) {
+    font-size: 1rem;
+  }
+}
+
+// Touch screens: taller text fields. Checkboxes and radios are excluded so
+// they keep their natural size.
+@include modal-touch {
+  input:not([type='checkbox']):not([type='radio']),
+  select {
+    min-height: $modal-touch-height;
+  }
 }
 
 input:focus,
@@ -169,6 +222,18 @@ label {
     color: #d1d5db;
     cursor: not-allowed;
   }
+
+  // Phones: pull the button in so it fits the smaller panel padding.
+  @include modal-max($modal-bp-xs) {
+    top: 8px;
+    right: 8px;
+  }
+
+  // Touch screens: a larger tap target for the close (x) button.
+  @include modal-touch {
+    width: $modal-touch-height;
+    height: $modal-touch-height;
+  }
 }
 
 .field {
@@ -181,8 +246,29 @@ label {
 .field-row {
   display: flex;
   gap: 1rem;
+
+  // Phones: fields sit one per row instead of being squeezed side by side.
+  @include modal-max($modal-bp-xs) {
+    flex-direction: column;
+    gap: 0;
+  }
 }
 
 .field-row .field {
   flex: 1;
+  min-width: 0; // lets long selects shrink instead of widening the row
+}
+
+.checkbox-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  font-size: 0.9rem;
+
+  input {
+    width: auto;
+    margin: 0;
+  }
 }

@@ -89,23 +89,32 @@
     </ng-template>
 
     <div class="pagination" *ngIf="items().length">
-      <button
-        type="button"
-        class="btn btn-pagination"
-        (click)="previousPage()"
-        [disabled]="currentPage() === 1"
-      >
-        Previous
-      </button>
-      <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
-      <button
-        type="button"
-        class="btn btn-pagination"
-        (click)="nextPage()"
-        [disabled]="currentPage() === totalPages()"
-      >
-        Next
-      </button>
+      <!-- Spacer element to balance the flex layout so the controls stay dead center -->
+      <div style="width: 100px"></div>
+
+      <!-- Centered Navigation Controls -->
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="previousPage()"
+          [disabled]="currentPage() === 1"
+        >
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages()"
+        >
+          Next
+        </button>
+      </div>
+
+      <!-- Right-aligned Summary -->
+      <p class="summary" *ngIf="items().length">Total {{ items().length }} Expense Items</p>
     </div>
   </ng-container>
 

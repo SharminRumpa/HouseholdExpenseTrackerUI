@@ -22,7 +22,7 @@
             <th>Role</th>
             <th>Created Date</th>
             <th>Updated Date</th>
-            <th>Actions</th>
+            <th class="action-title">Actions</th>
           </tr>
         </thead>
         <tbody>
@@ -54,23 +54,32 @@
     </ng-template>
 
     <div class="pagination" *ngIf="users().length">
-      <button
-        type="button"
-        class="btn btn-pagination"
-        (click)="previousPage()"
-        [disabled]="currentPage() === 1"
-      >
-        Previous
-      </button>
-      <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
-      <button
-        type="button"
-        class="btn btn-pagination"
-        (click)="nextPage()"
-        [disabled]="currentPage() === totalPages()"
-      >
-        Next
-      </button>
+      <!-- Spacer element to balance the flex layout so the controls stay dead center -->
+      <div style="width: 100px"></div>
+
+      <!-- Centered Navigation Controls -->
+      <div class="pagination-controls">
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="previousPage()"
+          [disabled]="currentPage() === 1"
+        >
+          Previous
+        </button>
+        <span class="page-info">Page {{ currentPage() }} of {{ totalPages() }}</span>
+        <button
+          type="button"
+          class="btn btn-pagination"
+          (click)="nextPage()"
+          [disabled]="currentPage() === totalPages()"
+        >
+          Next
+        </button>
+      </div>
+
+      <!-- Right-aligned Summary -->
+      <p class="summary" *ngIf="users().length">Total {{ users().length }} Users</p>
     </div>
   </ng-container>
 

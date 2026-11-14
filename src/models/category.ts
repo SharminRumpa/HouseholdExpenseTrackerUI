@@ -16,12 +16,22 @@ export interface CategoryUpdate {
   isActive: boolean;
 }
 
-export interface SubCategory {
+export interface ExpenseSubCategory {
   subCategoryId: number;
   categoryId: number;
   categoryName: string;
   subCategoryName: string;
   description?: string | null;
+  isActive: boolean;
+  createdAt: string;
+  lastUpdatedAt?: string | null;
+}
+
+// Create and update accept the same fields, so they share one payload type.
+export interface ExpenseSubCategoryPayload {
+  expenseCategoryId: number;
+  subCategoryName: string;
+  description: string | null;
   isActive: boolean;
 }
 
